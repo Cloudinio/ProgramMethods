@@ -1,0 +1,166 @@
+\doxysection{Player Class Reference}
+\hypertarget{class_player}{}\label{class_player}\index{Player@{Player}}
+
+
+{\ttfamily \+\#include $<$player.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_player_a1fa3cdab5209e99951ef13473f5eaf27}{Player}} (string \doxymbox{\hyperlink{class_player_a31fb4481b03d0189c29ce18966b4ece5}{country}}, string \doxymbox{\hyperlink{class_player_a5043cea65c58e2769d2b5229290a54e1}{full\+Name}}, string \doxymbox{\hyperlink{class_player_a1dc2fef52c9d84ae56371c967536e8b6}{club\+Name}}, \doxymbox{\hyperlink{player_8h_adb1fad3b6a121acd6db0b9eda7fd5111}{Positions}} \doxymbox{\hyperlink{class_player_a03a5bb2ff6cab0a132ba0db33912800c}{position}}, int \doxymbox{\hyperlink{class_player_a3dcd1228f12d2afb3a9d6e2bdc5152cd}{counter\+Games}}, int \doxymbox{\hyperlink{class_player_a7fa6a47da42234a93e4b1b4efe00f1d0}{counter\+Goals}})
+\item 
+\doxymbox{\hyperlink{class_player_affe0cc3cb714f6deb4e62f0c0d3f1fd8}{Player}} ()
+\item 
+string \doxymbox{\hyperlink{class_player_a259b8844587cffde89c43eca20003ec6}{Get\+Country}} () const
+\begin{DoxyCompactList}\small\item\em Геттеры. \end{DoxyCompactList}\item 
+string \doxymbox{\hyperlink{class_player_aff4900c67b63e8ea498cbe19a40841eb}{Get\+Full\+Name}} () const
+\item 
+string \doxymbox{\hyperlink{class_player_a82dd537f4cfe3d45c4b90210d7d70da0}{Get\+Club\+Name}} () const
+\item 
+\doxymbox{\hyperlink{player_8h_adb1fad3b6a121acd6db0b9eda7fd5111}{Positions}} \doxymbox{\hyperlink{class_player_a694bb89b17a91d925d36d42ec9272b77}{Get\+Position}} () const
+\item 
+int \doxymbox{\hyperlink{class_player_ac85f64a1fd00040f879b54c63a2c333a}{Get\+Counter\+Games}} () const
+\item 
+int \doxymbox{\hyperlink{class_player_a0c0c9881e5fc57428fbbdf75b5b793eb}{Get\+Counter\+Goals}} () const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+string \doxymbox{\hyperlink{class_player_a31fb4481b03d0189c29ce18966b4ece5}{country}}
+\item 
+string \doxymbox{\hyperlink{class_player_a5043cea65c58e2769d2b5229290a54e1}{full\+Name}}
+\item 
+string \doxymbox{\hyperlink{class_player_a1dc2fef52c9d84ae56371c967536e8b6}{club\+Name}}
+\item 
+\doxymbox{\hyperlink{player_8h_adb1fad3b6a121acd6db0b9eda7fd5111}{Positions}} \doxymbox{\hyperlink{class_player_a03a5bb2ff6cab0a132ba0db33912800c}{position}}
+\item 
+int \doxymbox{\hyperlink{class_player_a3dcd1228f12d2afb3a9d6e2bdc5152cd}{counter\+Games}}
+\item 
+int \doxymbox{\hyperlink{class_player_a7fa6a47da42234a93e4b1b4efe00f1d0}{counter\+Goals}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Класс для представления игрока. Включает страну, ФИО, клуб, позицию, количество матчей и голов за сборную. 
+
+\label{doc-constructors}
+\Hypertarget{class_player_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_player_a1fa3cdab5209e99951ef13473f5eaf27}\index{Player@{Player}!Player@{Player}}
+\index{Player@{Player}!Player@{Player}}
+\doxysubsubsection{\texorpdfstring{Player()}{Player()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_player_a1fa3cdab5209e99951ef13473f5eaf27} 
+Player::\+\+Player (\begin{DoxyParamCaption}\item[{string}]{country}{, }\item[{string}]{full\+Name}{, }\item[{string}]{club\+Name}{, }\item[{\doxymbox{\hyperlink{player_8h_adb1fad3b6a121acd6db0b9eda7fd5111}{Positions}}}]{position}{, }\item[{int}]{counter\+Games}{, }\item[{int}]{counter\+Goals}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Конструктор для инициализации объекта \doxylink{class_player}{Player}. 
+\begin{DoxyParams}{Parameters}
+{\em \doxylink{class_player_a31fb4481b03d0189c29ce18966b4ece5}{country}} & Страна игрока. \\
+\hline
+{\em \doxylink{class_player_a5043cea65c58e2769d2b5229290a54e1}{full\+Name}} & Полное имя игрока. \\
+\hline
+{\em \doxylink{class_player_a1dc2fef52c9d84ae56371c967536e8b6}{club\+Name}} & Название клуба игрока. \\
+\hline
+{\em \doxylink{class_player_a03a5bb2ff6cab0a132ba0db33912800c}{position}} & Позиция игрока на поле. \\
+\hline
+{\em \doxylink{class_player_a3dcd1228f12d2afb3a9d6e2bdc5152cd}{counter\+Games}} & Количество сыгранных матчей за сборную. \\
+\hline
+{\em \doxylink{class_player_a7fa6a47da42234a93e4b1b4efe00f1d0}{counter\+Goals}} & Количество голов за сборную (или пропущенных для вратаря). \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_player_affe0cc3cb714f6deb4e62f0c0d3f1fd8}\index{Player@{Player}!Player@{Player}}
+\index{Player@{Player}!Player@{Player}}
+\doxysubsubsection{\texorpdfstring{Player()}{Player()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_player_affe0cc3cb714f6deb4e62f0c0d3f1fd8} 
+Player::\+\+Player (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Пустой конструктор для создания объекта \doxylink{class_player}{Player} без инициализации. Используется в случае, если требуется создать пустой объект. 
+
+\label{doc-func-members}
+\Hypertarget{class_player_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_player_a82dd537f4cfe3d45c4b90210d7d70da0}\index{Player@{Player}!GetClubName@{GetClubName}}
+\index{GetClubName@{GetClubName}!Player@{Player}}
+\doxysubsubsection{\texorpdfstring{GetClubName()}{GetClubName()}}
+{\footnotesize\ttfamily \label{class_player_a82dd537f4cfe3d45c4b90210d7d70da0} 
+string Player::\+\+Get\+Club\+Name (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{class_player_ac85f64a1fd00040f879b54c63a2c333a}\index{Player@{Player}!GetCounterGames@{GetCounterGames}}
+\index{GetCounterGames@{GetCounterGames}!Player@{Player}}
+\doxysubsubsection{\texorpdfstring{GetCounterGames()}{GetCounterGames()}}
+{\footnotesize\ttfamily \label{class_player_ac85f64a1fd00040f879b54c63a2c333a} 
+int Player::\+\+Get\+Counter\+Games (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{class_player_a0c0c9881e5fc57428fbbdf75b5b793eb}\index{Player@{Player}!GetCounterGoals@{GetCounterGoals}}
+\index{GetCounterGoals@{GetCounterGoals}!Player@{Player}}
+\doxysubsubsection{\texorpdfstring{GetCounterGoals()}{GetCounterGoals()}}
+{\footnotesize\ttfamily \label{class_player_a0c0c9881e5fc57428fbbdf75b5b793eb} 
+int Player::\+\+Get\+Counter\+Goals (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{class_player_a259b8844587cffde89c43eca20003ec6}\index{Player@{Player}!GetCountry@{GetCountry}}
+\index{GetCountry@{GetCountry}!Player@{Player}}
+\doxysubsubsection{\texorpdfstring{GetCountry()}{GetCountry()}}
+{\footnotesize\ttfamily \label{class_player_a259b8844587cffde89c43eca20003ec6} 
+string Player::\+\+Get\+Country (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Геттеры. 
+
+\Hypertarget{class_player_aff4900c67b63e8ea498cbe19a40841eb}\index{Player@{Player}!GetFullName@{GetFullName}}
+\index{GetFullName@{GetFullName}!Player@{Player}}
+\doxysubsubsection{\texorpdfstring{GetFullName()}{GetFullName()}}
+{\footnotesize\ttfamily \label{class_player_aff4900c67b63e8ea498cbe19a40841eb} 
+string Player::\+\+Get\+Full\+Name (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{class_player_a694bb89b17a91d925d36d42ec9272b77}\index{Player@{Player}!GetPosition@{GetPosition}}
+\index{GetPosition@{GetPosition}!Player@{Player}}
+\doxysubsubsection{\texorpdfstring{GetPosition()}{GetPosition()}}
+{\footnotesize\ttfamily \label{class_player_a694bb89b17a91d925d36d42ec9272b77} 
+\doxymbox{\hyperlink{player_8h_adb1fad3b6a121acd6db0b9eda7fd5111}{Positions}} Player::\+\+Get\+Position (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\label{doc-variable-members}
+\Hypertarget{class_player_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{class_player_a1dc2fef52c9d84ae56371c967536e8b6}\index{Player@{Player}!clubName@{clubName}}
+\index{clubName@{clubName}!Player@{Player}}
+\doxysubsubsection{\texorpdfstring{clubName}{clubName}}
+{\footnotesize\ttfamily \label{class_player_a1dc2fef52c9d84ae56371c967536e8b6} 
+string Player::\+club\+Name\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{class_player_a3dcd1228f12d2afb3a9d6e2bdc5152cd}\index{Player@{Player}!counterGames@{counterGames}}
+\index{counterGames@{counterGames}!Player@{Player}}
+\doxysubsubsection{\texorpdfstring{counterGames}{counterGames}}
+{\footnotesize\ttfamily \label{class_player_a3dcd1228f12d2afb3a9d6e2bdc5152cd} 
+int Player::\+counter\+Games\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{class_player_a7fa6a47da42234a93e4b1b4efe00f1d0}\index{Player@{Player}!counterGoals@{counterGoals}}
+\index{counterGoals@{counterGoals}!Player@{Player}}
+\doxysubsubsection{\texorpdfstring{counterGoals}{counterGoals}}
+{\footnotesize\ttfamily \label{class_player_a7fa6a47da42234a93e4b1b4efe00f1d0} 
+int Player::\+counter\+Goals\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{class_player_a31fb4481b03d0189c29ce18966b4ece5}\index{Player@{Player}!country@{country}}
+\index{country@{country}!Player@{Player}}
+\doxysubsubsection{\texorpdfstring{country}{country}}
+{\footnotesize\ttfamily \label{class_player_a31fb4481b03d0189c29ce18966b4ece5} 
+string Player::\+country\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{class_player_a5043cea65c58e2769d2b5229290a54e1}\index{Player@{Player}!fullName@{fullName}}
+\index{fullName@{fullName}!Player@{Player}}
+\doxysubsubsection{\texorpdfstring{fullName}{fullName}}
+{\footnotesize\ttfamily \label{class_player_a5043cea65c58e2769d2b5229290a54e1} 
+string Player::\+full\+Name\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{class_player_a03a5bb2ff6cab0a132ba0db33912800c}\index{Player@{Player}!position@{position}}
+\index{position@{position}!Player@{Player}}
+\doxysubsubsection{\texorpdfstring{position}{position}}
+{\footnotesize\ttfamily \label{class_player_a03a5bb2ff6cab0a132ba0db33912800c} 
+\doxymbox{\hyperlink{player_8h_adb1fad3b6a121acd6db0b9eda7fd5111}{Positions}} Player::\+position\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{player_8h}{player.\+h}}\end{DoxyCompactItemize}

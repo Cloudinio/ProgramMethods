@@ -1,0 +1,124 @@
+\doxysection{main.\+cpp File Reference}
+\hypertarget{main_8cpp}{}\label{main_8cpp}\index{main.cpp@{main.cpp}}
+{\ttfamily \+\#include $<$vector$>$}\newline
+{\ttfamily \+\#include $<$utility$>$}\newline
+{\ttfamily \+\#include $<$chrono$>$}\newline
+{\ttfamily \+\#include "{}data.\+h"{}}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$class T$>$ }\\void \doxymbox{\hyperlink{main_8cpp_aa77acb048b746afebd4813eb8fe6d2f9}{quick\+SortR}} (T \texorpdfstring{$\ast$}{*}a, long N)
+\begin{DoxyCompactList}\small\item\em Быстрая сортировка. \end{DoxyCompactList}\item 
+{\footnotesize template$<$class T$>$ }\\void \doxymbox{\hyperlink{main_8cpp_ab3d9736a9e2d31977c764351e8482472}{merge}} (T a\+[$\,$]\+, long low, long mid, long high)
+\begin{DoxyCompactList}\small\item\em Сортировка слиянием. \end{DoxyCompactList}\item 
+{\footnotesize template$<$class T$>$ }\\void \doxymbox{\hyperlink{main_8cpp_aaaf73ed4aca157a585d58053ad81fb0e}{merge\+\_\+sort}} (T a\+[$\,$]\+, long low, long high)
+\item 
+{\footnotesize template$<$class T$>$ }\\void \doxymbox{\hyperlink{main_8cpp_afde4f981d566747cf327fe1f5fc0b49e}{down\+Heap}} (T a\+[$\,$]\+, long k, long n)
+\begin{DoxyCompactList}\small\item\em Пирамидальная сортировка. \end{DoxyCompactList}\item 
+{\footnotesize template$<$class T$>$ }\\void \doxymbox{\hyperlink{main_8cpp_a13e11eb964916a68da328cc4814c91b6}{heap\+Sort}} (T a\+[$\,$]\+, long size)
+\item 
+{\footnotesize template$<$typename F$>$ }\\long long \doxymbox{\hyperlink{main_8cpp_a54e1ca8ac82ae763ff167e8cb76f5c98}{measure\+\_\+us}} (F \&\&func)
+\begin{DoxyCompactList}\small\item\em Функция для замера времени. Функция, которая высчитывает разницу во времени между стартом и концом работы алгоритма. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{main_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4}{main}} ()
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{main_8cpp_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{main_8cpp_afde4f981d566747cf327fe1f5fc0b49e}\index{main.cpp@{main.cpp}!downHeap@{downHeap}}
+\index{downHeap@{downHeap}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{downHeap()}{downHeap()}}
+{\footnotesize\ttfamily \label{main_8cpp_afde4f981d566747cf327fe1f5fc0b49e} 
+template$<$class T$>$ \\
+void down\+Heap (\begin{DoxyParamCaption}\item[{T}]{a}{\+[$\,$]\+, }\item[{long}]{k}{, }\item[{long}]{n}{}\end{DoxyParamCaption})}
+
+
+
+Пирамидальная сортировка. 
+
+\Hypertarget{main_8cpp_a13e11eb964916a68da328cc4814c91b6}\index{main.cpp@{main.cpp}!heapSort@{heapSort}}
+\index{heapSort@{heapSort}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{heapSort()}{heapSort()}}
+{\footnotesize\ttfamily \label{main_8cpp_a13e11eb964916a68da328cc4814c91b6} 
+template$<$class T$>$ \\
+void heap\+Sort (\begin{DoxyParamCaption}\item[{T}]{a}{\+[$\,$]\+, }\item[{long}]{size}{}\end{DoxyParamCaption})}
+
+\Hypertarget{main_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4}\index{main.cpp@{main.cpp}!main@{main}}
+\index{main@{main}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily \label{main_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4} 
+int main (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Открываем файл для записи результатов замеров времени.
+
+Для каждого размера данных (из списка sizes) будем выполнять сортировку и измерять время.
+
+Формируем путь к файлу данных для текущего размера.
+
+Считываем данные о футболистах из CSV файла в вектор оригинальных данных.
+
+Проверка, соответствует ли количество строк в файле ожидаемому размеру.
+
+Лямбда-\/функция для выполнения алгоритма сортировки и замера времени. Эта функция принимает имя алгоритма и сам алгоритм сортировки.
+
+оздаём копию оригинальных данных, чтобы не изменять их в процессе сортировки.
+
+Измеряем время работы сортировки для данных.
+
+Записываем результат замера времени в файл. В файл записываем размер массива, название алгоритма и время работы.
+
+Быстрая сортировка (quick\+SortR).
+
+Сортировка слиянием (merge\+Sort).
+
+Пирамидальная сортировка (heap\+Sort).
+
+Стандартная сортировка.\Hypertarget{main_8cpp_a54e1ca8ac82ae763ff167e8cb76f5c98}\index{main.cpp@{main.cpp}!measure\_us@{measure\_us}}
+\index{measure\_us@{measure\_us}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{measure\_us()}{measure\_us()}}
+{\footnotesize\ttfamily \label{main_8cpp_a54e1ca8ac82ae763ff167e8cb76f5c98} 
+template$<$typename F$>$ \\
+long long measure\+\_\+us (\begin{DoxyParamCaption}\item[{F \&\&}]{func}{}\end{DoxyParamCaption})}
+
+
+
+Функция для замера времени. Функция, которая высчитывает разницу во времени между стартом и концом работы алгоритма. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em func} & Алгоритм. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Возвращает время в микросекундах. 
+\end{DoxyReturn}
+\Hypertarget{main_8cpp_ab3d9736a9e2d31977c764351e8482472}\index{main.cpp@{main.cpp}!merge@{merge}}
+\index{merge@{merge}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{merge()}{merge()}}
+{\footnotesize\ttfamily \label{main_8cpp_ab3d9736a9e2d31977c764351e8482472} 
+template$<$class T$>$ \\
+void merge (\begin{DoxyParamCaption}\item[{T}]{a}{\+[$\,$]\+, }\item[{long}]{low}{, }\item[{long}]{mid}{, }\item[{long}]{high}{}\end{DoxyParamCaption})}
+
+
+
+Сортировка слиянием. 
+
+\Hypertarget{main_8cpp_aaaf73ed4aca157a585d58053ad81fb0e}\index{main.cpp@{main.cpp}!merge\_sort@{merge\_sort}}
+\index{merge\_sort@{merge\_sort}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{merge\_sort()}{merge\_sort()}}
+{\footnotesize\ttfamily \label{main_8cpp_aaaf73ed4aca157a585d58053ad81fb0e} 
+template$<$class T$>$ \\
+void merge\+\_\+sort (\begin{DoxyParamCaption}\item[{T}]{a}{\+[$\,$]\+, }\item[{long}]{low}{, }\item[{long}]{high}{}\end{DoxyParamCaption})}
+
+\Hypertarget{main_8cpp_aa77acb048b746afebd4813eb8fe6d2f9}\index{main.cpp@{main.cpp}!quickSortR@{quickSortR}}
+\index{quickSortR@{quickSortR}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{quickSortR()}{quickSortR()}}
+{\footnotesize\ttfamily \label{main_8cpp_aa77acb048b746afebd4813eb8fe6d2f9} 
+template$<$class T$>$ \\
+void quick\+SortR (\begin{DoxyParamCaption}\item[{T \texorpdfstring{$\ast$}{*}}]{a}{, }\item[{long}]{N}{}\end{DoxyParamCaption})}
+
+
+
+Быстрая сортировка. 
+

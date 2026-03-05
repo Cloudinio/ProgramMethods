@@ -1,0 +1,76 @@
+\doxysection{player.\+h}
+\hypertarget{player_8h_source}{}\label{player_8h_source}\doxymbox{\hyperlink{player_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{keyword}{using\ namespace\ }std;}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00008\ \textcolor{keyword}{enum}\ \doxymbox{\hyperlink{player_8h_adb1fad3b6a121acd6db0b9eda7fd5111}{Positions}}\{\doxymbox{\hyperlink{player_8h_adb1fad3b6a121acd6db0b9eda7fd5111a402ce8172973a6a49113e74acf4dc600}{goalkeeper}},\ \doxymbox{\hyperlink{player_8h_adb1fad3b6a121acd6db0b9eda7fd5111a8363bde1df65f6c88823460b0604e573}{defender}},\ \doxymbox{\hyperlink{player_8h_adb1fad3b6a121acd6db0b9eda7fd5111adf4cb290d0720fcecb177ab6e51a8938}{halfdefender}},\ \doxymbox{\hyperlink{player_8h_adb1fad3b6a121acd6db0b9eda7fd5111a8ab676ded5d24aa203c69705dc641841}{attacker}}\};}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_player_a1fa3cdab5209e99951ef13473f5eaf27}{Player}}\ \{}
+\DoxyCodeLine{00015\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keywordtype}{string}\ \doxymbox{\hyperlink{class_player_a31fb4481b03d0189c29ce18966b4ece5}{country}};}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordtype}{string}\ \doxymbox{\hyperlink{class_player_a5043cea65c58e2769d2b5229290a54e1}{fullName}};}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keywordtype}{string}\ \doxymbox{\hyperlink{class_player_a1dc2fef52c9d84ae56371c967536e8b6}{clubName}};}
+\DoxyCodeLine{00019\ \ \ \ \ \doxymbox{\hyperlink{player_8h_adb1fad3b6a121acd6db0b9eda7fd5111}{Positions}}\ \doxymbox{\hyperlink{class_player_a03a5bb2ff6cab0a132ba0db33912800c}{position}};}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_player_a3dcd1228f12d2afb3a9d6e2bdc5152cd}{counterGames}};}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_player_a7fa6a47da42234a93e4b1b4efe00f1d0}{counterGoals}};}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00033\ \ \ \ \ \doxymbox{\hyperlink{class_player_a1fa3cdab5209e99951ef13473f5eaf27}{Player}}(\textcolor{keywordtype}{string}\ \doxymbox{\hyperlink{class_player_a31fb4481b03d0189c29ce18966b4ece5}{country}},\ \textcolor{keywordtype}{string}\ \doxymbox{\hyperlink{class_player_a5043cea65c58e2769d2b5229290a54e1}{fullName}},\ \textcolor{keywordtype}{string}\ \doxymbox{\hyperlink{class_player_a1dc2fef52c9d84ae56371c967536e8b6}{clubName}},\ \doxymbox{\hyperlink{player_8h_adb1fad3b6a121acd6db0b9eda7fd5111}{Positions}}\ \doxymbox{\hyperlink{class_player_a03a5bb2ff6cab0a132ba0db33912800c}{position}},\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_player_a3dcd1228f12d2afb3a9d6e2bdc5152cd}{counterGames}},\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_player_a7fa6a47da42234a93e4b1b4efe00f1d0}{counterGoals}})\{}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ this-\/>country\ =\ \doxymbox{\hyperlink{class_player_a31fb4481b03d0189c29ce18966b4ece5}{country}};}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ this-\/>fullName\ =\ \doxymbox{\hyperlink{class_player_a5043cea65c58e2769d2b5229290a54e1}{fullName}};}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ this-\/>clubName\ =\ \doxymbox{\hyperlink{class_player_a1dc2fef52c9d84ae56371c967536e8b6}{clubName}};}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ this-\/>position\ =\ \doxymbox{\hyperlink{class_player_a03a5bb2ff6cab0a132ba0db33912800c}{position}};}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ this-\/>counterGames\ =\ \doxymbox{\hyperlink{class_player_a3dcd1228f12d2afb3a9d6e2bdc5152cd}{counterGames}};}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ this-\/>counterGoals\ =\ \doxymbox{\hyperlink{class_player_a7fa6a47da42234a93e4b1b4efe00f1d0}{counterGoals}};}
+\DoxyCodeLine{00040\ \ \ \ \ \}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00046\ \ \ \ \ \doxymbox{\hyperlink{class_player_affe0cc3cb714f6deb4e62f0c0d3f1fd8}{Player}}()\ \{\}}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordtype}{string}\ \doxymbox{\hyperlink{class_player_a259b8844587cffde89c43eca20003ec6}{GetCountry}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_player_a31fb4481b03d0189c29ce18966b4ece5}{country}};\ \}}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordtype}{string}\ \doxymbox{\hyperlink{class_player_aff4900c67b63e8ea498cbe19a40841eb}{GetFullName}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_player_a5043cea65c58e2769d2b5229290a54e1}{fullName}};\ \}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordtype}{string}\ \doxymbox{\hyperlink{class_player_a82dd537f4cfe3d45c4b90210d7d70da0}{GetClubName}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_player_a1dc2fef52c9d84ae56371c967536e8b6}{clubName}};\ \}}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ \doxymbox{\hyperlink{player_8h_adb1fad3b6a121acd6db0b9eda7fd5111}{Positions}}\ \doxymbox{\hyperlink{class_player_a694bb89b17a91d925d36d42ec9272b77}{GetPosition}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_player_a03a5bb2ff6cab0a132ba0db33912800c}{position}};\ \}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_player_ac85f64a1fd00040f879b54c63a2c333a}{GetCounterGames}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_player_a3dcd1228f12d2afb3a9d6e2bdc5152cd}{counterGames}};\ \}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_player_a0c0c9881e5fc57428fbbdf75b5b793eb}{GetCounterGoals}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_player_a7fa6a47da42234a93e4b1b4efe00f1d0}{counterGoals}};\ \}}
+\DoxyCodeLine{00060\ \};}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00070\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{player_8h_a756a3c6010e773a24977b298ca3bfc6e}{operator\ <\ }}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_player}{Player}}\&\ a,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_player}{Player}}\&\ b)\ \{}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keywordflow}{if}\ (a.\doxymbox{\hyperlink{class_player_ac85f64a1fd00040f879b54c63a2c333a}{GetCounterGames}}()\ ==\ b.\doxymbox{\hyperlink{class_player_ac85f64a1fd00040f879b54c63a2c333a}{GetCounterGames}}())\ \{}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (a.\doxymbox{\hyperlink{class_player_aff4900c67b63e8ea498cbe19a40841eb}{GetFullName}}()\ ==\ b.\doxymbox{\hyperlink{class_player_aff4900c67b63e8ea498cbe19a40841eb}{GetFullName}}())\ \{}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ a.\doxymbox{\hyperlink{class_player_a0c0c9881e5fc57428fbbdf75b5b793eb}{GetCounterGoals}}()\ >\ b.\doxymbox{\hyperlink{class_player_a0c0c9881e5fc57428fbbdf75b5b793eb}{GetCounterGoals}}();}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ a.\doxymbox{\hyperlink{class_player_aff4900c67b63e8ea498cbe19a40841eb}{GetFullName}}()\ <\ b.\doxymbox{\hyperlink{class_player_aff4900c67b63e8ea498cbe19a40841eb}{GetFullName}}();}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00078\ \ \ \ \ \}}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ a.\doxymbox{\hyperlink{class_player_ac85f64a1fd00040f879b54c63a2c333a}{GetCounterGames}}()\ <\ b.\doxymbox{\hyperlink{class_player_ac85f64a1fd00040f879b54c63a2c333a}{GetCounterGames}}();}
+\DoxyCodeLine{00081\ \ \ \ \ \}}
+\DoxyCodeLine{00082\ \}}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00091\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{player_8h_af1289139b372c65ea940c9d5e6c79898}{operator\ >\ }}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_player}{Player}}\&\ a,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_player}{Player}}\&\ b)\ \{}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keywordflow}{return}\ b\ <\ a;}
+\DoxyCodeLine{00093\ \}}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00102\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{player_8h_a582731bddcf8f4a259383cf71dfe8032}{operator\ <=\ }}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_player}{Player}}\&\ a,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_player}{Player}}\&\ b)\ \{}
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keywordflow}{return}\ !(a\ >\ b);}
+\DoxyCodeLine{00104\ \}}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00113\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{player_8h_a28ed2c895392fb4094c1183e107552e5}{operator\ >=\ }}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_player}{Player}}\&\ a,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_player}{Player}}\&\ b)\ \{}
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keywordflow}{return}\ !(a\ <\ b);}
+\DoxyCodeLine{00115\ \}}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00124\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{player_8h_aba6c67e499a3e6bf64da4f7ac2807667}{operator\ ==\ }}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_player}{Player}}\&\ a,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_player}{Player}}\&\ b)\ \{}
+\DoxyCodeLine{00125\ \ \ \ \ \textcolor{keywordflow}{return}\ !(a\ <\ b)\ \&\&\ !(a\ >\ b);}
+\DoxyCodeLine{00126\ \}}
+
+\end{DoxyCode}

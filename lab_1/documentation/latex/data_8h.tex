@@ -1,0 +1,72 @@
+\doxysection{data.\+h File Reference}
+\hypertarget{data_8h}{}\label{data_8h}\index{data.h@{data.h}}
+{\ttfamily \+\#include $<$iostream$>$}\newline
+{\ttfamily \+\#include $<$string$>$}\newline
+{\ttfamily \+\#include $<$fstream$>$}\newline
+{\ttfamily \+\#include $<$sstream$>$}\newline
+{\ttfamily \+\#include "{}player.\+h"{}}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{player_8h_adb1fad3b6a121acd6db0b9eda7fd5111}{Positions}} \doxymbox{\hyperlink{data_8h_a2e1fa1dfed9d724a7f431c328c6eb0f0}{Parse\+Position}} (const string \&s)
+\begin{DoxyCompactList}\small\item\em функция, которая преобразует строковое представление position в перечисленное из \doxylink{player_8h_adb1fad3b6a121acd6db0b9eda7fd5111}{Positions} \end{DoxyCompactList}\item 
+vector$<$ \doxymbox{\hyperlink{class_player}{Player}} $>$ \doxymbox{\hyperlink{data_8h_a839be496d3d483d929a0aa8a10a37ca5}{Read\+Players\+From\+CSV}} (const string \&filename)
+\begin{DoxyCompactList}\small\item\em Функция чтения данных из csv файла. Эта функция читает файл, парсит строки и преобразует их в объекты \doxylink{class_player}{Player}, которые добавляются в вектор. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{data_8h_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{data_8h_a2e1fa1dfed9d724a7f431c328c6eb0f0}\index{data.h@{data.h}!ParsePosition@{ParsePosition}}
+\index{ParsePosition@{ParsePosition}!data.h@{data.h}}
+\doxysubsubsection{\texorpdfstring{ParsePosition()}{ParsePosition()}}
+{\footnotesize\ttfamily \label{data_8h_a2e1fa1dfed9d724a7f431c328c6eb0f0} 
+\doxymbox{\hyperlink{player_8h_adb1fad3b6a121acd6db0b9eda7fd5111}{Positions}} Parse\+Position (\begin{DoxyParamCaption}\item[{const string \&}]{s}{}\end{DoxyParamCaption})}
+
+
+
+функция, которая преобразует строковое представление position в перечисленное из \doxylink{player_8h_adb1fad3b6a121acd6db0b9eda7fd5111}{Positions} 
+
+
+\begin{DoxyParams}{Parameters}
+{\em s} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+определенная position. 
+\end{DoxyReturn}
+\Hypertarget{data_8h_a839be496d3d483d929a0aa8a10a37ca5}\index{data.h@{data.h}!ReadPlayersFromCSV@{ReadPlayersFromCSV}}
+\index{ReadPlayersFromCSV@{ReadPlayersFromCSV}!data.h@{data.h}}
+\doxysubsubsection{\texorpdfstring{ReadPlayersFromCSV()}{ReadPlayersFromCSV()}}
+{\footnotesize\ttfamily \label{data_8h_a839be496d3d483d929a0aa8a10a37ca5} 
+vector$<$ \doxymbox{\hyperlink{class_player}{Player}} $>$ Read\+Players\+From\+CSV (\begin{DoxyParamCaption}\item[{const string \&}]{filename}{}\end{DoxyParamCaption})}
+
+
+
+Функция чтения данных из csv файла. Эта функция читает файл, парсит строки и преобразует их в объекты \doxylink{class_player}{Player}, которые добавляются в вектор. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em filename} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Вектор players. 
+\end{DoxyReturn}
+Создание объекта для работы с файлами.
+
+Проверка, открылся ли файл.
+
+Чтение заголовка.
+
+Чтение оставшихся строк, каждая строка представляет одного игрока.
+
+Создание объекта stringstream для дальнейшего разделения строки.
+
+Преобразуем строковое представление позиции в перечисление.
+
+Преобразование строк в числа для количества матчей и голов.
+
+Добавление нового объекта \doxylink{class_player}{Player} в вектор.
+
+Возвращаем вектор с объектами \doxylink{class_player}{Player}
