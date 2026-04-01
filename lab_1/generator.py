@@ -8,7 +8,7 @@ COUNTRIES = ["Россия","Испания","Германия","Франция"
 CLUBS = ["Зенит","Спартак","ЦСКА","Локомотив","Динамо","Реал Мадрид","Барселона","Бавария","ПСЖ","Ювентус","Манчестер Сити","Арсенал","Ливерпуль"]
 
 POSITIONS = ["goalkeeper", "defender", "halfdefender", "attacker"]
-POS_WEIGHTS = [0.12, 0.32, 0.32, 0.24]  # чтобы вратарей было меньше
+POS_WEIGHTS = [0.12, 0.32, 0.32, 0.24]
 
 SURNAMES = [
     "Иванов","Петров","Сидоров","Смирнов","Кузнецов","Попов","Васильев","Соколов","Михайлов","Новиков",
@@ -37,7 +37,6 @@ PATRONYMICS = [
 ]
 
 def gen_fio(i: int) -> str:
-    # уникальность за счёт суффикса
     return f"{random.choice(SURNAMES)} {random.choice(NAMES)} {random.choice(PATRONYMICS)}"
 
 def gen_games() -> int:
