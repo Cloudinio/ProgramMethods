@@ -1,3 +1,8 @@
+/**
+ * @file data.h
+ * @brief Файл с функциями чтения и парсинга CSV-файлов с данными о футболистах.
+ */
+
 #ifndef DATA_H
 #define DATA_H
 

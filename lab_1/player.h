@@ -1,3 +1,8 @@
+/**
+ * @file player.h
+ * @brief Файл с описанием класса Player и перегрузками операторов сравнения.
+ */
+
 #ifndef PLAYER_H
 #define PLAYER_H
 
