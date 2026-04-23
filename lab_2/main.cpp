@@ -4,6 +4,7 @@
 #include "RBTree.h"
 #include "../lab_1/data.h"
 #include "HashTable.h"
+#include <map>
 
 using namespace std::chrono;
 
@@ -33,7 +34,15 @@ vector<int> linearSearch(Player a[], long size, Player b) {
     return result;
 }
 
-/// @brief Бинарное дерево поиска.
+/// @brief Multimap.
+vector<Player> multimapSearch(multimap<string, Player>& mp, const string& key) {
+    vector<Player> result;
+    auto range = mp.equal_range(key);
+    for (auto it = range.first; it != range.second; ++it) {
+        result.push_back(it->second);
+    }
+    return result;
+}
 
 int main() {
     vector<int> sizes = {100, 200, 500, 1000, 2000, 5000, 10000, 20000, 30000, 50000, 70000, 100000};
@@ -78,12 +87,22 @@ int main() {
         out << N << ",RBTree," << t_rbt << "\n";
 
         /// ===== HashTable =====
-        HashTable ht(2 * N + 1);   // размер таблицы можно брать побольше
+        HashTable ht(2 * N + 1);
         ht.build(original.data(), N);
         long long t_hash = measure_us([&]() {
             vector<int> found = ht.searchAll(target);
         });
         out << N << ",HashTable," << t_hash << "\n";
+
+        /// ===== multimap =====
+        multimap<string, Player> mp;
+        for (int i = 0; i < N; i++) {
+            mp.insert({original[i].GetFullName(), original[i]});
+        }
+        long long t_multimap = measure_us([&]() {
+            vector<Player> found = multimapSearch(mp, target.GetFullName());
+        });
+        out << N << ",multimap," << t_multimap << "\n";
     }
 
     cout << "Done";

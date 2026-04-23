@@ -4,10 +4,27 @@
 
 using namespace std;
 
+/**
+ * @brief Класс красно-черного дерева для поиска объектов Player по ключу.
+ * В качестве ключа используется первое нечисловое поле объекта Player, а именно ФИО игрока.
+ * Каждый узел дерева хранит:
+ * - строковый ключ;
+ * - список индексов элементов исходного массива с таким ключом;
+ * - цвет узла;
+ * - ссылки на потомков и родителя.
+ * Если в исходном массиве встречаются одинаковые ключи, они не создают новые узлы, а добавляются в вектор indices существующего узла.
+ */
 class RBTree {
 private:
+    /**
+     * @brief Цвет узла красно-черного дерева.
+     */
     enum Color { RED, BLACK };
 
+    /**
+     * @brief Структура узла красно-черного дерева.
+     * Узел содержит ключ, список индексов элементов массива, цвет, а также указатели на левого и правого потомков и на родительский узел.
+     */
     struct Node {
         string key;
         vector<int> indices;
@@ -16,6 +33,11 @@ private:
         Node* right;
         Node* parent;
 
+        /**
+         * @brief Конструктор узла красно-черного дерева.
+         * @param k Ключ узла.
+         * @param index Индекс элемента исходного массива.
+         */
         Node(const string& k, int index)
             : key(k), indices{index}, color(RED),
               left(nullptr), right(nullptr), parent(nullptr) {}
@@ -24,15 +46,30 @@ private:
     Node* root = nullptr;
 
 private:
-    /// Замени p.fio на настоящее поле с ФИО
+    /**
+     * @brief Получить ключ из объекта Player.
+     * @param p Объект Player.
+     * @return ФИО игрока.
+     */
     string getKey(const Player& p) const {
         return p.GetFullName();
     }
 
+    /**
+     * @brief Получить цвет узла.
+     * Если указатель равен nullptr, такой узел считается черным.
+     * @param node Указатель на узел.
+     * @return Цвет узла.
+     */
     Color getColor(Node* node) const {
         return (node == nullptr ? BLACK : node->color);
     }
 
+    /**
+     * @brief Выполнить левый поворот вокруг узла.
+     * Используется для восстановления свойств красно-черного дерева после вставки.
+     * @param x Узел, вокруг которого выполняется левый поворот.
+     */
     void rotateLeft(Node* x) {
         Node* y = x->right;
         if (y == nullptr) return;
@@ -56,6 +93,11 @@ private:
         x->parent = y;
     }
 
+    /**
+     * @brief Выполнить правый поворот вокруг узла.
+     * Используется для восстановления свойств красно-черного дерева после вставки.
+     * @param x Узел, вокруг которого выполняется правый поворот.
+     */
     void rotateRight(Node* x) {
         Node* y = x->left;
         if (y == nullptr) return;
@@ -79,6 +121,11 @@ private:
         x->parent = y;
     }
 
+    /**
+     * @brief Восстановить свойства красно-черного дерева после вставки.
+     * Новый узел сначала вставляется как красный. Если после вставки нарушаются свойства красно-черного дерева, выполняются перекрашивания и повороты.
+     * @param z Указатель на вставленный узел.
+     */
     void fixInsert(Node* z) {
         while (z != root && getColor(z->parent) == RED) {
             Node* parent = z->parent;
@@ -96,7 +143,7 @@ private:
                     grandparent->color = RED;
                     z = grandparent;
                 } else {
-                    /// Случай 2: z - правый ребенок
+                    /// Случай 2: узел является правым сыном
                     if (z == parent->right) {
                         z = parent;
                         rotateLeft(z);
@@ -104,7 +151,7 @@ private:
                         grandparent = parent ? parent->parent : nullptr;
                     }
 
-                    /// Случай 3: z - левый ребенок
+                    /// Случай 3: узел является левым сыном
                     if (parent != nullptr) parent->color = BLACK;
                     if (grandparent != nullptr) {
                         grandparent->color = RED;
@@ -142,6 +189,10 @@ private:
         }
     }
 
+    /**
+     * @brief Рекурсивно освободить память, занятую поддеревом.
+     * @param node Корень удаляемого поддерева.
+     */
     void clear(Node* node) {
         if (node == nullptr) return;
         clear(node->left);
@@ -150,12 +201,25 @@ private:
     }
 
 public:
+    /**
+     * @brief Конструктор красно-черного дерева по умолчанию.
+     */
     RBTree() = default;
 
+    /**
+     * @brief Деструктор красно-черного дерева.
+     * Освобождает всю память, выделенную под узлы дерева.
+     */
     ~RBTree() {
         clear(root);
     }
 
+    /**
+     * @brief Построить красно-черное дерево по массиву объектов Player.
+     * Перед построением старое дерево очищается.
+     * @param a Массив объектов Player.
+     * @param size Размер массива.
+     */
     void build(Player a[], long size) {
         clear(root);
         root = nullptr;
@@ -165,6 +229,12 @@ public:
         }
     }
 
+    /**
+     * @brief Вставить элемент в красно-черное дерево.
+     * Если ключ уже существует, новый узел не создается, а индекс элемента добавляется в список indices существующего узла.
+     * @param player Объект Player.
+     * @param index Индекс объекта в исходном массиве.
+     */
     void insert(const Player& player, int index) {
         string key = getKey(player);
 
@@ -198,6 +268,11 @@ public:
         fixInsert(z);
     }
 
+    /**
+     * @brief Найти все вхождения по строковому ключу.
+     * @param key Искомый ключ.
+     * @return Вектор индексов всех найденных элементов.
+     */
     vector<int> searchAll(const string& key) const {
         Node* cur = root;
 
@@ -214,6 +289,11 @@ public:
         return {};
     }
 
+    /**
+     * @brief Найти все вхождения по объекту Player.
+     * @param target Объект Player, ключ которого используется для поиска.
+     * @return Вектор индексов всех найденных элементов.
+     */
     vector<int> searchAll(const Player& target) const {
         return searchAll(getKey(target));
     }
