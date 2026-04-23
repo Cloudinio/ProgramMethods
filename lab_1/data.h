@@ -1,6 +1,10 @@
+#ifndef DATA_H
+#define DATA_H
+
 /// @file Файл data.h: файл, в котором реализована функция парсинга csv файла, сгенерированного generator.py.
 #include <iostream>
 #include <string>
+#include <vector>
 #include <fstream>
 #include <sstream>
 #include "player.h"
@@ -62,3 +66,5 @@ vector<Player> ReadPlayersFromCSV(const string& filename) {
     ///Возвращаем вектор с объектами Player
     return players;
 }
+
+#endif DATA_H

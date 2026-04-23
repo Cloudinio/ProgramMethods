@@ -1,3 +1,6 @@
+#ifndef PLAYER_H
+#define PLAYER_H
+
 /// @file Файл Player.h: файл, в котором написана реализация класса Player и перегрузка операторов сравнения.
 #include <string>
 #include <iostream>
@@ -124,3 +127,5 @@ bool operator >= (const Player& a, const Player& b) {
 bool operator == (const Player& a, const Player& b) {
     return !(a < b) && !(a > b);
 }
+
+#endif

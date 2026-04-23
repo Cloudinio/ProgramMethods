@@ -1,0 +1,49 @@
+N     , algorithm   , time_us
+   100, linearSearch,       5
+   100, BST         ,       2
+   100, RBTree      ,       1
+   100, HashTable   ,       1
+   200, linearSearch,       9
+   200, BST         ,       2
+   200, RBTree      ,       1
+   200, HashTable   ,       1
+   500, linearSearch,      16
+   500, BST         ,       2
+   500, RBTree      ,       2
+   500, HashTable   ,       1
+  1000, linearSearch,      26
+  1000, BST         ,       2
+  1000, RBTree      ,       1
+  1000, HashTable   ,       1
+  2000, linearSearch,      37
+  2000, BST         ,       1
+  2000, RBTree      ,       1
+  2000, HashTable   ,       0
+  5000, linearSearch,      62
+  5000, BST         ,       2
+  5000, RBTree      ,       1
+  5000, HashTable   ,       0
+ 10000, linearSearch,     164
+ 10000, BST         ,       1
+ 10000, RBTree      ,       1
+ 10000, HashTable   ,       1
+ 20000, linearSearch,     208
+ 20000, BST         ,       2
+ 20000, RBTree      ,       1
+ 20000, HashTable   ,       1
+ 30000, linearSearch,     298
+ 30000, BST         ,       2
+ 30000, RBTree      ,       1
+ 30000, HashTable   ,       0
+ 50000, linearSearch,     815
+ 50000, BST         ,       1
+ 50000, RBTree      ,       1
+ 50000, HashTable   ,       1
+ 70000, linearSearch,    1114
+ 70000, BST         ,       2
+ 70000, RBTree      ,       2
+ 70000, HashTable   ,       1
+100000, linearSearch,    1717
+100000, BST         ,       2
+100000, RBTree      ,       1
+100000, HashTable   ,       0
