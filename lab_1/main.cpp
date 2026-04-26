@@ -188,5 +188,13 @@ int main() {
     }
 
     cout << "Done";
+
+    /**
+    * @brief Замер зависимости времени от размера массива.
+    * @image html sorting_times.png width=80%
+    * Ссылка на гитхаб:
+    * https://github.com/Cloudinio/ProgramMethods/tree/main/lab_1
+    */
+
     return 0;
 }
