@@ -139,13 +139,4 @@ public:
     vector<int> searchAll(const Player& target) const {
         return search(root, getKey(target));
     }
-
-    /**
-     * @brief Выполнить поиск всех вхождений по строковому ключу.
-     * @param key Искомый строковый ключ.
-     * @return Вектор индексов всех найденных элементов.
-     */
-    vector<int> searchAll(const string& key) const {
-        return search(root, key);
-    }
 };
