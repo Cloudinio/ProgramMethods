@@ -84,7 +84,7 @@ public:
      * Создает таблицу заданного размера.
      * @param size Размер таблицы. Желательно выбирать больше числа элементов.
      */
-    explicit HashTable(size_t size = 100003)
+    HashTable(size_t size = 100003)
         : table(size), tableSize(size), collisions(0) {}
 
     /**
@@ -142,11 +142,12 @@ public:
     }
 
     /**
-     * @brief Найти все вхождения по строковому ключу.
-     * @param key Искомый ключ.
+     * @brief Найти все вхождения по объекту Player.
+     * @param target Объект Player, ключ которого используется для поиска.
      * @return Вектор индексов всех найденных элементов.
      */
-    vector<int> searchAll(const string& key) const {
+    vector<int> searchAll(const Player& target) const {
+        string key = getKey(target);
         size_t pos = indexForKey(key);
 
         for (const auto& entry : table[pos]) {
@@ -159,15 +160,6 @@ public:
     }
 
     /**
-     * @brief Найти все вхождения по объекту Player.
-     * @param target Объект Player, ключ которого используется для поиска.
-     * @return Вектор индексов всех найденных элементов.
-     */
-    vector<int> searchAll(const Player& target) const {
-        return searchAll(getKey(target));
-    }
-
-    /**
      * @brief Получить количество коллизий, возникших при построении таблицы.
      * @return Число коллизий.
      */
@@ -176,4 +168,4 @@ public:
     }
 };
 
-#endif // HASHTABLE_H
+#endif
