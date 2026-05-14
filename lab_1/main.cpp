@@ -5,6 +5,7 @@
 #include <vector>
 #include <utility>
 #include <chrono>
+#include <algorithm>
 #include "data.h"
 
 using namespace std::chrono;
@@ -15,16 +16,15 @@ template<class T> void quickSortR(T* a, long N) {
     long i = 0, j = N-1;
     T p = a[ N>>1 ];
 
-    do
-    {
+    do {
         while ( a[i] < p ) i++;
         while ( a[j] > p ) j--;
 
-    if (i <= j)
-	{
-        swap(a[i], a[j]);
-        i++; j--;
-    }
+        if (i <= j) {
+            swap(a[i], a[j]);
+            i++; 
+            j--;
+        }
     } while ( i<=j );
 
     if ( j > 0 ) quickSortR(a, j + 1);
@@ -33,15 +33,13 @@ template<class T> void quickSortR(T* a, long N) {
 
 /// @brief Сортировка слиянием.
 template<class T> void merge(T a[], long low, long mid, long high) {
-	// Variables declaration. 
 	T *b = new T[high+1-low];
 	long h,i,j,k;
 	h=low;
 	i=0;
 	j=mid+1;
-	// Merges the two array's into b[] until the first one is finish
-	while((h<=mid)&&(j<=high))
-	{
+
+	while((h<=mid)&&(j<=high)) {
 		if(a[h]<=a[j]) {
 			b[i]=a[h];
 			h++;
@@ -52,21 +50,19 @@ template<class T> void merge(T a[], long low, long mid, long high) {
 		}
 		i++;
 	}
-    if(h>mid)
-	{
+    if(h>mid) {
 		for(k=j;k<=high;k++) {
 			b[i]=a[k];
 			i++;
 		}
 	}
-	else
-	{
+	else {
 		for(k=h;k<=mid;k++) {
 			b[i]=a[k];
 			i++;
 		}
 	}
-	// Prints into the original array
+
 	for(k=0;k<=high-low;k++) {
 		a[k+low]=b[k];
 	}
@@ -83,13 +79,12 @@ template<class T> void merge_sort(T a[], long low, long high) {
 }
 
 /// @brief Пирамидальная сортировка.
-template<class T> void downHeap(T a[], long k, long n)
-{
+template<class T> void downHeap(T a[], long k, long n) {
     T new_elem = a[k];
     long child;
 
-    while (k <= n / 2) {
-        child = 2 * k;
+    while (2*k+1 <= n) {
+        child = 2*k+1;
 
         if (child < n && a[child] < a[child + 1])
             child++;
@@ -101,17 +96,16 @@ template<class T> void downHeap(T a[], long k, long n)
     }
     a[k] = new_elem;
 }
-template<class T> void heapSort(T a[], long size)
-{
+template<class T> void heapSort(T a[], long size) {
     if (size <= 1) return;
 
-    for (long i = size / 2 - 1; i >= 0; --i) {
+    for (long i = size/2-1; i >= 0; --i) {
         downHeap(a, i, size - 1);
         if (i == 0) break;
     }
 
     for (long i = size - 1; i > 0; --i) {
-        std::swap(a[i], a[0]);
+        swap(a[i], a[0]);
         downHeap(a, 0, i - 1);
     }
 }
