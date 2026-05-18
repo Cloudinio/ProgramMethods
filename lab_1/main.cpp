@@ -3,7 +3,6 @@
  * @brief Содержит реализацию и сравнение алгоритмов сортировки.
  */
 #include <vector>
-#include <utility>
 #include <chrono>
 #include <algorithm>
 #include "data.h"
