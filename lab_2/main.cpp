@@ -48,6 +48,8 @@ int main() {
     vector<int> sizes = {100, 200, 500, 1000, 2000, 5000, 10000, 20000, 30000, 50000, 70000, 100000};
     /// Открываем файл для записи результатов замеров времени.
     ofstream out("timings.csv");
+    ofstream out_col("collisions.csv");
+    out_col << "N,count,ratio\n";
     out << "N,algorithm,time_us\n";
 
     /// Для каждого размера данных (из списка sizes) будем выполнять поиск и измерять время.
@@ -57,11 +59,6 @@ int main() {
 
         /// Считываем данные о футболистах из CSV файла в вектор оригинальных данных.
         vector<Player> original = ReadPlayersFromCSV(file);
-
-        /// Проверка, соответствует ли количество строк в файле ожидаемому размеру.
-        if (original.size() != N) {
-            cerr << "WARNING: expected " << N << " rows, got " << original.size() << " in " << file << "\n";
-        }
 
         /// ============== Линейный поиск ==============
         Player target = original[original.size() / 2];
@@ -92,6 +89,9 @@ int main() {
         long long t_hash = measure_us([&]() {
             vector<int> found = ht.searchAll(target);
         });
+        long long col = ht.getCollisions();
+        double ratio = (double)col / N;
+        out_col << N << "," << col << "," << ratio << "\n";
         out << N << ",HashTable," << t_hash << "\n";
 
         /// ===== multimap =====
