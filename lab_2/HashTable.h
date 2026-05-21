@@ -61,8 +61,9 @@ private:
         unsigned long long hash = 0;
         unsigned long long p_pow = 1;
 
-        for (char c : s) {
-            hash += (unsigned long long)(unsigned char)c * p_pow;
+        for (size_t i = 0; i < s.size(); i++) {
+            unsigned char c = (unsigned char)s[i];
+            hash += (unsigned long long)c * p_pow;
             p_pow *= P;
         }
 
@@ -124,9 +125,10 @@ public:
         if (!table[pos].empty()) {
             /// Но если ключ уже есть, это не новая коллизия "разных ключей"
             bool sameKeyExists = false;
-            for (auto& entry : table[pos]) {
-                if (entry.key == key) {
-                    entry.indices.push_back(index);
+
+            for (size_t i = 0; i < table[pos].size(); i++) {
+                if (table[pos][i].key == key) {
+                    table[pos][i].indices.push_back(index);
                     sameKeyExists = true;
                     break;
                 }
@@ -150,9 +152,9 @@ public:
         string key = getKey(target);
         size_t pos = indexForKey(key);
 
-        for (const auto& entry : table[pos]) {
-            if (entry.key == key) {
-                return entry.indices;
+        for (size_t i = 0; i < table[pos].size(); i++) {
+            if (table[pos][i].key == key) {
+                return table[pos][i].indices;
             }
         }
 

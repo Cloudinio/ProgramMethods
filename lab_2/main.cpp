@@ -14,9 +14,9 @@ using namespace std::chrono;
 /// @return Возвращает время в микросекундах.
 template <typename F>
 long long measure_us(F&& func) {
-    auto t1 = high_resolution_clock::now();
+    high_resolution_clock::time_point t1 = high_resolution_clock::now();
     func();
-    auto t2 = high_resolution_clock::now();
+    high_resolution_clock::time_point t2 = high_resolution_clock::now();
     return duration_cast<microseconds>(t2 - t1).count();
 }
 
@@ -37,71 +37,91 @@ vector<int> linearSearch(Player a[], long size, Player b) {
 /// @brief Multimap.
 vector<Player> multimapSearch(multimap<string, Player>& mp, const string& key) {
     vector<Player> result;
-    auto range = mp.equal_range(key);
-    for (auto it = range.first; it != range.second; ++it) {
+
+    pair<multimap<string, Player>::iterator, multimap<string, Player>::iterator> range =
+        mp.equal_range(key);
+
+    for (multimap<string, Player>::iterator it = range.first; it != range.second; ++it) {
         result.push_back(it->second);
     }
+
     return result;
 }
 
 int main() {
     vector<int> sizes = {100, 200, 500, 1000, 2000, 5000, 10000, 20000, 30000, 50000, 70000, 100000};
+
     /// Открываем файл для записи результатов замеров времени.
     ofstream out("timings.csv");
     ofstream out_col("collisions.csv");
+
     out_col << "N,count,ratio\n";
     out << "N,algorithm,time_us\n";
 
-    /// Для каждого размера данных (из списка sizes) будем выполнять поиск и измерять время.
-    for (int N : sizes) {
+    /// Для каждого размера данных из списка sizes выполняем поиск и измеряем время.
+    for (size_t sizeIndex = 0; sizeIndex < sizes.size(); sizeIndex++) {
+        int N = sizes[sizeIndex];
+
         /// Формируем путь к файлу данных для текущего размера.
         string file = "../lab_1/football_datasets/dataset_" + to_string(N) + ".csv";
 
         /// Считываем данные о футболистах из CSV файла в вектор оригинальных данных.
         vector<Player> original = ReadPlayersFromCSV(file);
 
-        /// ============== Линейный поиск ==============
+        /// Линейный поиск
         Player target = original[original.size() / 2];
-        long long t_linear = measure_us([&]() { 
+
+        long long t_linear = measure_us([&]() {
             linearSearch(original.data(), N, target);
         });
+
         out << N << ",linearSearch," << t_linear << "\n";
 
-        /// ===== BST =====
+        /// BST
         BST tree;
         tree.build(original.data(), N);
+
         long long t_bst = measure_us([&]() {
             vector<int> found = tree.searchAll(target);
         });
+
         out << N << ",BST," << t_bst << "\n";
 
-        /// ===== RBTree =====
+        /// RBTree
         RBTree rbtree;
         rbtree.build(original.data(), N);
+
         long long t_rbt = measure_us([&]() {
             vector<int> found = rbtree.searchAll(target);
         });
+
         out << N << ",RBTree," << t_rbt << "\n";
 
-        /// ===== HashTable =====
+        /// HashTable
         HashTable ht(2 * N + 1);
         ht.build(original.data(), N);
+
         long long t_hash = measure_us([&]() {
             vector<int> found = ht.searchAll(target);
         });
+
         long long col = ht.getCollisions();
         double ratio = (double)col / N;
+
         out_col << N << "," << col << "," << ratio << "\n";
         out << N << ",HashTable," << t_hash << "\n";
 
-        /// ===== multimap =====
+        /// multimap
         multimap<string, Player> mp;
+
         for (int i = 0; i < N; i++) {
             mp.insert({original[i].GetFullName(), original[i]});
         }
+
         long long t_multimap = measure_us([&]() {
             vector<Player> found = multimapSearch(mp, target.GetFullName());
         });
+
         out << N << ",multimap," << t_multimap << "\n";
     }
 
