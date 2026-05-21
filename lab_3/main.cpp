@@ -4,9 +4,7 @@
 #include <cmath>
 #include <cstdint>
 #include <fstream>
-#include <iomanip>
 #include <iostream>
-#include <map>
 #include <numeric>
 #include <memory>
 #include <random>
@@ -14,6 +12,7 @@
 #include <vector>
 
 using namespace std;
+using namespace chrono;
 
 static constexpr double TWO32 = 4294967296.0;
 static constexpr double EPS = 1e-12;
@@ -23,45 +22,34 @@ struct Generator {
     virtual ~Generator() = default;
     virtual uint32_t nextU32() = 0;
     virtual string name() const = 0;
-    double next01() { return (nextU32() + 0.5) / TWO32; }
 };
 
 // Модифицированный метод серединных произведений + xorshift-перемешивание
 class ModifiedMiddleProductXor : public Generator {
 private:
     uint32_t x, y;      // два предыдущих значения генератора
-    uint32_t salt;      // дополнительная "соль" для уменьшения риска вырождения
+    uint32_t salt;      // соль для уменьшения риска вырождения
 
 public:
     ModifiedMiddleProductXor(uint32_t seed1, uint32_t seed2)
         : x(seed1 ? seed1 : 123456789u), y(seed2 ? seed2 : 362436069u), salt(0x9E3779B9u) {}
 
     uint32_t nextU32() override {
-        // Перемножаем два предыдущих числа.
-        // Используем uint64_t, потому что произведение двух uint32_t может быть 64-битным.
         uint64_t prod = uint64_t(x) * uint64_t(y);
 
-        // Берём средние 32 бита произведения.
-        // Это аналог "взять середину" из метода серединных произведений.
         uint32_t middle = uint32_t((prod >> 16) & 0xFFFFFFFFu);
 
-        // Модификация: дополнительно перемешиваем биты через xorshift.
-        // Это помогает уменьшить простые закономерности и быстрые вырождения.
+        // Перемешиваем биты через xorshift
         middle ^= middle << 13;
         middle ^= middle >> 17;
         middle ^= middle << 5;
 
-        // Добавляем соль, чтобы последовательность сильнее менялась на каждом шаге.
         middle += salt;
 
-        // Обновляем внутреннее состояние генератора.
         x = y ^ (salt << 1);
-
-        // Если вдруг получилось 0, заменяем его на salt, чтобы избежать "нулевой ловушки".
         y = middle ? middle : salt;
 
-        // Меняем salt на следующем шаге.
-        // Константа 0x9E3779B9 часто используется для битового смешивания.
+        // 0x9E3779B9 используется для битового смешивания
         salt += 0x9E3779B9u;
 
         return y;
@@ -72,32 +60,22 @@ public:
     }
 };
 
-// -----------------------------------------------------------------------------
-// 2) Модифицированный линейный конгруэнтный генератор
-//
-// Основа из лекции:
-// X_{n+1} = (a * X_n + c) mod m
-//
-// Здесь m = 2^64, а взятие по модулю происходит автоматически
-// за счёт переполнения беззнакового uint64_t.
-// -----------------------------------------------------------------------------
-class ModifiedLCGPermuted final : public Generator {
-    uint64_t state; // текущее состояние генератора
+
+// Модифицированный линейный конгруэнтный генератор c перемешиванием
+class ModifiedLCGPermuted : public Generator {
+    uint64_t state;
 
 public:
-    explicit ModifiedLCGPermuted(uint64_t seed)
+    ModifiedLCGPermuted(uint64_t seed)
         : state(seed ? seed : 1) {}
 
     uint32_t nextU32() override {
-        // Основная формула LCG:
         // state = a * state + c mod 2^64
         state = state * 6364136223846793005ULL + 1442695040888963407ULL;
 
         uint64_t z = state;
 
-        // Модификация: отдаём не само состояние LCG,
-        // а дополнительно перемешанное значение.
-        // Это улучшает поведение битов, особенно младших.
+        // Отдаём не само состояние LCG, а дополнительно перемешанное значение
         z ^= z >> 30;
         z *= 0xbf58476d1ce4e5b9ULL;
 
@@ -106,7 +84,7 @@ public:
 
         z ^= z >> 31;
 
-        // Возвращаем старшие 32 бита перемешанного 64-битного значения.
+        // Возвращаем старшие 32 бита перемешанного 64-битного значения
         return uint32_t(z >> 32);
     }
 
@@ -115,95 +93,33 @@ public:
     }
 };
 
-// -----------------------------------------------------------------------------
-// 3) Модифицированный генератор Фибоначчи с запаздыванием,
-//    переносом и дополнительным xor/mix-перемешиванием.
-//
-// Основа из лекции:
-// генератор Фибоначчи с запаздыванием использует лаги p и q,
-// например x_n = x_{n-p} + x_{n-q}
-// или x_n = x_{n-p} XOR x_{n-q}.
-// -----------------------------------------------------------------------------
-class ModifiedLaggedFibonacciCarry final : public Generator {
-    // Размер массива состояния и лаги
-    static constexpr size_t P = 55;
-    static constexpr size_t Q = 24;
-
-    // Массив предыдущих значений генератора
-    array<uint32_t, P> s{};
-
-    // Индекс текущего элемента массива
-    size_t idx = 0;
-
-    // Перенос, похожий на carry в генераторах Multiply-With-Carry
-    uint32_t carry = 1;
+// Генератор с XOR-перемешиванием с добавлением соли
+class XorShift32Salt : public Generator {
+private:
+    uint32_t x;
+    uint32_t w;
 
 public:
-    explicit ModifiedLaggedFibonacciCarry(uint32_t seed) {
-        // Инициализируем массив состояния с помощью splitmix-подобного смешивания.
-        // Это нужно, чтобы стартовые значения были хорошо перемешаны.
-        uint64_t z = seed ? seed : 88172645463393265ULL;
-
-        for (auto &v : s) {
-            z += 0x9E3779B97F4A7C15ULL;
-
-            uint64_t t = z;
-            t = (t ^ (t >> 30)) * 0xbf58476d1ce4e5b9ULL;
-            t = (t ^ (t >> 27)) * 0x94d049bb133111ebULL;
-            t ^= t >> 31;
-
-            v = uint32_t(t >> 32);
-        }
-
-        // Делаем начальный перенос нечётным.
-        carry = s[0] | 1u;
-    }
+    XorShift32Salt(uint32_t seed)
+        : x(seed ? seed : 2463534242u),
+          w(0x9E3779B9u) {}
 
     uint32_t nextU32() override {
-        size_t i = idx;
+        x ^= x << 13;
+        x ^= x >> 17;
+        x ^= x << 5;
 
-        // Второй индекс берётся с запаздыванием Q.
-        size_t j = (idx + P - Q) % P;
+        w += 0x9E3779B9u;
 
-        // Складываем два значения из массива и перенос.
-        // uint64_t нужен, чтобы увидеть переполнение 32 бит.
-        uint64_t sum = uint64_t(s[i]) + uint64_t(s[j]) + carry;
-
-        // Младшие 32 бита суммы — новое значение.
-        uint32_t x = uint32_t(sum);
-
-        // Старшие биты суммы — новый перенос.
-        carry = uint32_t(sum >> 32);
-
-        // Модификация: дополнительно смешиваем результат с лаговым значением.
-        // Здесь используется циклический сдвиг и XOR.
-        x ^= (s[j] << 7) | (s[j] >> 25);
-
-        // Дополнительное tempering-перемешивание битов.
-        x ^= x >> 16;
-        x *= 0x7feb352du;
-        x ^= x >> 15;
-        x *= 0x846ca68bu;
-        x ^= x >> 16;
-
-        // Записываем новое значение в массив состояния.
-        s[i] = x;
-
-        // Переходим к следующему индексу.
-        idx = (idx + 1) % P;
-
-        return x;
+        return x + w;
     }
 
     string name() const override {
-        return "ModifiedLaggedFibonacciCarry";
+        return "XorShift32Salt";
     }
 };
 
-// -----------------------------------------------------------------------------
-// Стандартный генератор Mersenne Twister из C++.
-// Он нужен для сравнения скорости с собственными генераторами.
-// -----------------------------------------------------------------------------
+// Стандартный генератор Mersenne Twister
 class StdMT19937 final : public Generator {
     std::mt19937 mt;
 
@@ -220,17 +136,14 @@ public:
     }
 };
 
-// ------------------------- Расчёт основных статистик -------------------------
-
-// Структура для хранения среднего, стандартного отклонения
-// и коэффициента вариации.
+// Расчёт основных статистик
 struct BasicStats {
-    double mean;    // среднее значение
-    double stddev;  // стандартное отклонение
-    double cv;      // коэффициент вариации
+    double mean;
+    double stddev;
+    double cv;
 };
 
-// Считает среднее, стандартное отклонение и коэффициент вариации.
+// Считает среднее, стандартное отклонение и коэффициент вариации
 BasicStats basicStats(const vector<double>& v) {
     double mean = accumulate(v.begin(), v.end(), 0.0) / v.size();
 
@@ -239,20 +152,14 @@ BasicStats basicStats(const vector<double>& v) {
         var += (x - mean) * (x - mean);
     }
 
-    // Выборочная дисперсия
     var /= (v.size() - 1);
 
     double sd = sqrt(var);
 
-    // Коэффициент вариации = стандартное отклонение / среднее
     return {mean, sd, sd / max(abs(mean), EPS)};
 }
 
-// -----------------------------------------------------------------------------
-// Приближённая обратная функция нормального распределения.
-// Используется для вычисления критических значений χ².
-// Автор аппроксимации: Peter J. Acklam.
-// -----------------------------------------------------------------------------
+// Приближённая обратная функция нормального распределения
 static double invNorm(double p) {
     static const double a[] = {
         -3.969683028665376e+01,
@@ -311,8 +218,7 @@ static double invNorm(double p) {
            (((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1);
 }
 
-// Приближённое критическое значение χ².
-// Используется аппроксимация Уилсона — Хилферти.
+// Приближённое критическое значение хи-квадрат
 static double chiSquareCritical(int df, double p) {
     double z = invNorm(p);
 
@@ -321,26 +227,24 @@ static double chiSquareCritical(int df, double p) {
     return df * x * x * x;
 }
 
-// Результат проверки χ² на равномерность распределения
+// Результат проверки хи-квадрат на равномерность распределения
 struct ChiResult {
-    int bins;       // количество интервалов
-    double chi2;    // экспериментальное значение χ²
-    double low;     // нижняя критическая граница
-    double high;    // верхняя критическая граница
-    bool pass;      // прошёл ли тест
+    int bins;
+    double chi2;
+    double low;
+    double high;
+    bool pass;
 };
 
-// Проверка равномерности распределения по критерию χ²
+// Проверка равномерности распределения по критерию хи-квадрат
 ChiResult chiUniform(const vector<double>& v) {
     int N = (int)v.size();
 
-    // Количество интервалов выбирается по правилу Стерджеса:
-    // k = 1 + log2(N)
+    // Количество интервалов выбирается по правилу Стерджеса: k = 1 + log2(N)
     int k = max(5, (int)ceil(1.0 + log2((double)N)));
 
     vector<int> cnt(k, 0);
 
-    // Считаем, сколько чисел попало в каждый интервал
     for (double x : v) {
         int id = min(k - 1, max(0, int(x * k)));
         cnt[id]++;
@@ -349,7 +253,7 @@ ChiResult chiUniform(const vector<double>& v) {
     // Ожидаемое количество чисел в каждом интервале
     double expected = double(N) / k;
 
-    // Расчёт экспериментального χ²
+    // Расчёт экспериментального хи-квадрат
     double chi2 = 0.0;
     for (int c : cnt) {
         chi2 += (c - expected) * (c - expected) / expected;
@@ -362,19 +266,19 @@ ChiResult chiUniform(const vector<double>& v) {
     double low = chiSquareCritical(df, 0.025);
     double high = chiSquareCritical(df, 0.975);
 
-    // Генератор проходит тест, если χ² попал в допустимый интервал
+    // Генератор проходит тест, если хи-квадрат попал в допустимый интервал
     return {k, chi2, low, high, chi2 >= low && chi2 <= high};
 }
 
-// ------------------------- NIST / Diehard-подобные тесты -------------------------
+// NIST / Diehard-подобные тесты
 
 // Общий формат результата статистического теста
 struct TestResult {
-    string test;       // название теста
-    double statistic;  // значение статистики
-    double low;        // нижняя граница
-    double high;       // верхняя граница
-    bool pass;         // результат теста
+    string test;
+    double statistic;
+    double low;
+    double high;
+    bool pass;
 };
 
 // Преобразует массив 32-битных чисел в последовательность битов
@@ -383,7 +287,6 @@ vector<uint8_t> bitsFromNumbers(const vector<uint32_t>& nums) {
     bits.reserve(nums.size() * 32);
 
     for (uint32_t x : nums) {
-        // Записываем биты от старшего к младшему
         for (int b = 31; b >= 0; --b) {
             bits.push_back((x >> b) & 1u);
         }
@@ -392,10 +295,9 @@ vector<uint8_t> bitsFromNumbers(const vector<uint32_t>& nums) {
     return bits;
 }
 
-// -----------------------------------------------------------------------------
-// NIST frequency test.
-// Проверяет, примерно ли одинаково часто встречаются 0 и 1.
-// -----------------------------------------------------------------------------
+
+// NIST frequency test
+// Проверяет, примерно ли одинаково часто встречаются 0 и 1
 TestResult bitFrequency(const vector<uint8_t>& bits) {
     // Количество единиц
     int64_t ones = accumulate(bits.begin(), bits.end(), int64_t(0));
@@ -405,15 +307,11 @@ TestResult bitFrequency(const vector<uint8_t>& bits) {
     // z-статистика: насколько количество единиц отклоняется от n / 2
     double z = (ones - n / 2.0) / sqrt(n / 4.0);
 
-    // При нормальном поведении |z| не должен превышать 1.96
     return {"NIST_bit_frequency_abs_z", fabs(z), 0.0, 1.96, fabs(z) <= 1.96};
 }
 
-// -----------------------------------------------------------------------------
-// NIST runs test.
-// Проверяет количество серий одинаковых битов.
-// Например: 11100011 содержит серии 111, 000, 11.
-// -----------------------------------------------------------------------------
+// NIST runs test
+// Проверяет количество серий одинаковых битов
 TestResult bitRuns(const vector<uint8_t>& bits) {
     int runs = 1;
 
@@ -437,10 +335,8 @@ TestResult bitRuns(const vector<uint8_t>& bits) {
     return {"NIST_runs_abs_z", fabs(z), 0.0, 1.96, fabs(z) <= 1.96};
 }
 
-// -----------------------------------------------------------------------------
-// Serial 2-bit test.
-// Проверяет равномерность появления пар битов: 00, 01, 10, 11.
-// -----------------------------------------------------------------------------
+// Serial 2-bit test
+// Проверяет равномерность появления пар битов
 TestResult serial2(const vector<uint8_t>& bits) {
     array<int, 4> cnt{0, 0, 0, 0};
 
@@ -453,7 +349,7 @@ TestResult serial2(const vector<uint8_t>& bits) {
     double exp = n / 4.0;
     double chi2 = 0;
 
-    // χ² по четырём категориям
+    // хи-квадрат по четырём категориям
     for (int c : cnt) {
         chi2 += (c - exp) * (c - exp) / exp;
     }
@@ -464,11 +360,7 @@ TestResult serial2(const vector<uint8_t>& bits) {
     return {"NIST_serial_2bit_chi2", chi2, low, high, chi2 >= low && chi2 <= high};
 }
 
-// -----------------------------------------------------------------------------
-// Diehard monkey / poker test для 4-битных слов.
-// Проверяет, равномерно ли встречаются все 16 возможных блоков:
-// 0000, 0001, ..., 1111.
-// -----------------------------------------------------------------------------
+// Diehard monkey / poker test для 4-битных слов
 TestResult poker4(const vector<uint8_t>& bits) {
     array<int, 16> cnt{};
 
@@ -488,7 +380,6 @@ TestResult poker4(const vector<uint8_t>& bits) {
     double exp = blocks / 16.0;
     double chi2 = 0;
 
-    // χ² по 16 возможным 4-битным словам
     for (int c : cnt) {
         chi2 += (c - exp) * (c - exp) / exp;
     }
@@ -499,11 +390,7 @@ TestResult poker4(const vector<uint8_t>& bits) {
     return {"Diehard_monkey_poker4_chi2", chi2, low, high, chi2 >= low && chi2 <= high};
 }
 
-// -----------------------------------------------------------------------------
-// Diehard overlapping permutations test.
-// Берутся 5 соседних чисел.
-// Проверяется, насколько равномерно встречаются все 5! = 120 порядков.
-// -----------------------------------------------------------------------------
+// Diehard overlapping permutations test
 TestResult overlappingPermutations(const vector<double>& v) {
     array<int, 120> cnt{};
 
@@ -553,7 +440,6 @@ TestResult overlappingPermutations(const vector<double>& v) {
     double exp = windows / 120.0;
     double chi2 = 0;
 
-    // χ² по 120 возможным перестановкам
     for (int c : cnt) {
         chi2 += (c - exp) * (c - exp) / exp;
     }
@@ -570,11 +456,7 @@ TestResult overlappingPermutations(const vector<double>& v) {
     };
 }
 
-// -----------------------------------------------------------------------------
-// Diehard birthday spacings test.
-// Аналог "парадокса дней рождения".
-// Проверяет совпадения расстояний между случайными точками.
-// -----------------------------------------------------------------------------
+// Diehard birthday spacings test
 TestResult birthdaySpacings(const vector<double>& v) {
     // Размер дискретного пространства
     const int m = 1 << 20;
@@ -622,7 +504,7 @@ TestResult birthdaySpacings(const vector<double>& v) {
 
 // Запускает все NIST/Diehard-подобные тесты для одной выборки
 vector<TestResult> allTests(const vector<uint32_t>& nums, const vector<double>& vals) {
-    auto bits = bitsFromNumbers(nums);
+    vector<uint8_t>  bits = bitsFromNumbers(nums);
 
     vector<TestResult> r;
 
@@ -649,7 +531,7 @@ unique_ptr<Generator> makeGen(int method, uint64_t seed) {
             return make_unique<ModifiedLCGPermuted>(seed);
 
         case 2:
-            return make_unique<ModifiedLaggedFibonacciCarry>(uint32_t(seed));
+            return make_unique<XorShift32Salt>(uint32_t(seed));
 
         default:
             return make_unique<StdMT19937>(uint32_t(seed));
@@ -657,9 +539,6 @@ unique_ptr<Generator> makeGen(int method, uint64_t seed) {
 }
 
 int main() {
-    ios::sync_with_stdio(false);
-    cout << fixed << setprecision(6);
-
     // По условию нужно не менее 20 выборок каждым методом
     const int samplesPerMethod = 20;
 
@@ -667,22 +546,19 @@ int main() {
     const int sampleSize = 1000;
 
     // Файл с общей сводкой по выборкам
-    ofstream summary("lab3_results_summary.csv");
+    ofstream summary("results_summary.csv");
     summary << "method,sample,N,mean,stddev,cv,chi_bins,chi2,chi_low,chi_high,chi_pass,tests_passed,total_tests\n";
 
     // Файл с подробными результатами NIST/Diehard-подобных тестов
-    ofstream testsCsv("lab3_tests_detail.csv");
+    ofstream testsCsv("tests_detail.csv");
     testsCsv << "method,sample,test,statistic,low,high,pass\n";
-
-    cout << "LAB 3: PRNG comparison, 3 modified methods + std::mt19937\n";
-    cout << "Generating " << samplesPerMethod << " samples for each method, N=" << sampleSize << "\n\n";
 
     // Основная часть лабораторной:
     // для каждого из трёх собственных генераторов создаём 20 выборок
     for (int method = 0; method < 3; ++method) {
         for (int s = 0; s < samplesPerMethod; ++s) {
             // Для каждой выборки используем свой seed
-            auto gen = makeGen(method, 1234567ULL + 1000003ULL * s + 911ULL * method);
+            unique_ptr<Generator> gen = makeGen(method, 1234567ULL + 1000003ULL * s + 911ULL * method);
 
             vector<uint32_t> nums;
             nums.reserve(sampleSize);
@@ -703,30 +579,18 @@ int main() {
             // Считаем основные статистики
             BasicStats st = basicStats(vals);
 
-            // Проверяем равномерность по χ²
+            // Проверяем равномерность по хи-квадрат
             ChiResult ch = chiUniform(vals);
 
             // Запускаем NIST/Diehard-подобные тесты
-            auto tests = allTests(nums, vals);
+            vector<TestResult> tests = allTests(nums, vals);
 
             int passed = 0;
-            for (auto &t : tests) {
-                if (t.pass) {
+
+            for (size_t i = 0; i < tests.size(); i++) {
+                if (tests[i].pass) {
                     passed++;
                 }
-            }
-
-            // В консоль выводим краткую информацию только по первой выборке каждого метода
-            if (s == 0) {
-                cout << gen->name()
-                     << ": mean=" << st.mean
-                     << ", sd=" << st.stddev
-                     << ", cv=" << st.cv
-                     << ", chi2=" << ch.chi2
-                     << " [" << ch.low << "; " << ch.high << "] "
-                     << (ch.pass ? "PASS" : "FAIL")
-                     << ", tests=" << passed << "/" << tests.size()
-                     << "\n";
             }
 
             // Записываем общую статистику в CSV
@@ -746,66 +610,44 @@ int main() {
                     << "\n";
 
             // Записываем подробные результаты каждого теста в CSV
-            for (auto &t : tests) {
+            for (size_t i = 0; i < tests.size(); i++) {
                 testsCsv << gen->name() << ','
-                         << s + 1 << ','
-                         << t.test << ','
-                         << t.statistic << ','
-                         << t.low << ','
-                         << t.high << ','
-                         << (t.pass ? 1 : 0)
-                         << "\n";
+                        << s + 1 << ','
+                        << tests[i].test << ','
+                        << tests[i].statistic << ','
+                        << tests[i].low << ','
+                        << tests[i].high << ','
+                        << (tests[i].pass ? 1 : 0)
+                        << "\n";
             }
         }
     }
 
-    // -------------------------------------------------------------------------
-    // Замер скорости генерации.
-    // По условию нужно проверить объёмы от 1000 до 1 000 000 элементов.
-    // -------------------------------------------------------------------------
-    vector<int> sizes = {
-        1000,
-        5000,
-        10000,
-        50000,
-        100000,
-        250000,
-        500000,
-        1000000
-    };
+    // Замер скорости генерации
+    vector<int> sizes = {1000, 5000, 10000, 50000, 100000, 250000, 500000, 1000000};
 
-    ofstream speed("lab3_speed.csv");
+    ofstream speed("speed.csv");
     speed << "method,N,milliseconds\n";
-
-    // sink нужен, чтобы компилятор не удалил цикл генерации как "ненужный"
-    volatile uint32_t sink = 0;
 
     // Здесь сравниваются 3 собственных метода и стандартный std::mt19937
     for (int method = 0; method < 4; ++method) {
         for (int N : sizes) {
-            auto gen = makeGen(method, 987654321ULL + method);
+            unique_ptr<Generator> gen = makeGen(method, 987654321ULL + method);
 
-            auto t1 = chrono::high_resolution_clock::now();
+            high_resolution_clock::time_point t1 = high_resolution_clock::now();
 
-            // Генерируем N чисел и одновременно меняем sink
+            // Генерируем N чисел
             for (int i = 0; i < N; i++) {
-                sink ^= gen->nextU32();
+                gen->nextU32();
             }
 
-            auto t2 = chrono::high_resolution_clock::now();
+            high_resolution_clock::time_point t2 = high_resolution_clock::now();
+            double ms = duration<double, milli>(t2 - t1).count();
 
-            // Время генерации в миллисекундах
-            double ms = chrono::duration<double, milli>(t2 - t1).count();
-
-            speed << gen->name() << ','
-                  << N << ','
-                  << ms
-                  << "\n";
+            speed << gen->name() << ',' << N << ',' << ms << "\n";
         }
     }
 
-    cout << "\nFiles written: lab3_results_summary.csv, lab3_tests_detail.csv, lab3_speed.csv\n";
-    cout << "Control checksum: " << sink << "\n";
-
+    cout << "Done";
     return 0;
 }
