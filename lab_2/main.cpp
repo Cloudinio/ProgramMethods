@@ -13,7 +13,7 @@ using namespace std::chrono;
 /// @param func Алгоритм поиска.
 /// @return Возвращает время в микросекундах.
 template <typename F>
-long long measure_us(F&& func) {
+long long measure_us(F func) {
     high_resolution_clock::time_point t1 = high_resolution_clock::now();
     func();
     high_resolution_clock::time_point t2 = high_resolution_clock::now();
