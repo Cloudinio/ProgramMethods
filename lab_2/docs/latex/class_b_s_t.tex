@@ -1,0 +1,75 @@
+\doxysection{BST Class Reference}
+\hypertarget{class_b_s_t}{}\label{class_b_s_t}\index{BST@{BST}}
+
+
+Класс бинарного дерева поиска для поиска объектов Player по ключу. В качестве ключа используется первое нечисловое поле объекта Player, а именно ФИО игрока. Дерево хранит не сами объекты Player, а только ключ и список индексов элементов исходного массива, у которых этот ключ совпадает. Это позволяет:\+  
+
+
+
+
+{\ttfamily \+\#include $<$BST.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_b_s_t_aff9c7948fbba37844d2893b920ddc238}\label{class_b_s_t_aff9c7948fbba37844d2893b920ddc238} 
+{\bfseries \texorpdfstring{$\sim$}{\string~}\+BST} ()
+\begin{DoxyCompactList}\small\item\em Деструктор бинарного дерева поиска. Освобождает всю динамически выделенную память, занятую узлами дерева. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_b_s_t_a642c9cebbd1458c80bcd8744e1e8dfef}{build}} (Player a\+[$\,$]\+, long size)
+\begin{DoxyCompactList}\small\item\em Построить дерево по массиву объектов Player. Перед построением старое дерево очищается. \end{DoxyCompactList}\item 
+vector$<$ int $>$ \doxymbox{\hyperlink{class_b_s_t_a9f338b642ba894993989231d35690be4}{search\+All}} (const Player \&target) const
+\begin{DoxyCompactList}\small\item\em Выполнить поиск всех вхождений объекта Player по его ключу. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Класс бинарного дерева поиска для поиска объектов Player по ключу. В качестве ключа используется первое нечисловое поле объекта Player, а именно ФИО игрока. Дерево хранит не сами объекты Player, а только ключ и список индексов элементов исходного массива, у которых этот ключ совпадает. Это позволяет:\+ 
+
+
+\begin{DoxyItemize}
+\item искать все вхождения по ключу;
+\item не дублировать сами объекты в узлах дерева. 
+\end{DoxyItemize}
+
+\label{doc-func-members}
+\Hypertarget{class_b_s_t_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_b_s_t_a642c9cebbd1458c80bcd8744e1e8dfef}\index{BST@{BST}!build@{build}}
+\index{build@{build}!BST@{BST}}
+\doxysubsubsection{\texorpdfstring{build()}{build()}}
+{\footnotesize\ttfamily \label{class_b_s_t_a642c9cebbd1458c80bcd8744e1e8dfef} 
+void BST::\+build (\begin{DoxyParamCaption}\item[{Player}]{a}{\+[$\,$]\+, }\item[{long}]{size}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Построить дерево по массиву объектов Player. Перед построением старое дерево очищается. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & Массив объектов Player. \\
+\hline
+{\em size} & Размер массива. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_b_s_t_a9f338b642ba894993989231d35690be4}\index{BST@{BST}!searchAll@{searchAll}}
+\index{searchAll@{searchAll}!BST@{BST}}
+\doxysubsubsection{\texorpdfstring{searchAll()}{searchAll()}}
+{\footnotesize\ttfamily \label{class_b_s_t_a9f338b642ba894993989231d35690be4} 
+vector$<$ int $>$ BST::\+search\+All (\begin{DoxyParamCaption}\item[{const Player \&}]{target}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Выполнить поиск всех вхождений объекта Player по его ключу. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em target} & Объект Player, ключ которого используется для поиска. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Вектор индексов всех найденных элементов. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+BST.\+h\end{DoxyCompactItemize}

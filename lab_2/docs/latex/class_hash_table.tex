@@ -1,0 +1,135 @@
+\doxysection{Hash\+Table Class Reference}
+\hypertarget{class_hash_table}{}\label{class_hash_table}\index{HashTable@{HashTable}}
+
+
+Класс хеш-\/таблицы для поиска объектов Player по ключу. В качестве ключа используется первое нечисловое поле объекта Player, а именно ФИО игрока. Хеш-\/таблица реализована методом цепочек:\+ каждая ячейка таблицы хранит список элементов, попавших в одну корзину. В узлах таблицы хранятся:\+  
+
+
+
+
+{\ttfamily \+\#include $<$Hash\+Table.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_hash_table_afdffa6220be047199b778f5a72d61a7f}{Hash\+Table}} (size\+\_\+t size=100003)
+\begin{DoxyCompactList}\small\item\em Конструктор хеш-\/таблицы. Создает таблицу заданного размера. \end{DoxyCompactList}\item 
+\Hypertarget{class_hash_table_a94a35e0cf2ce6fa291d48138f58635ed}\label{class_hash_table_a94a35e0cf2ce6fa291d48138f58635ed} 
+void {\bfseries clear} ()
+\begin{DoxyCompactList}\small\item\em Очистить хеш-\/таблицу. Удаляет все записи из всех корзин и сбрасывает счетчик коллизий. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_hash_table_a0fa3fd9208b7f3e89dde81689c3ed6cd}{build}} (Player a\+[$\,$]\+, long size)
+\begin{DoxyCompactList}\small\item\em Построить хеш-\/таблицу по массиву объектов Player. Перед построением старая таблица очищается. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_hash_table_a5de16f1ceef01c13ac14fda32ccb921e}{insert}} (const Player \&player, int index)
+\begin{DoxyCompactList}\small\item\em Вставить элемент массива в хеш-\/таблицу. Если ключ уже существует в соответствующей корзине, новый индекс добавляется в список indices существующей записи. Если корзина уже содержит записи с другими ключами, это считается коллизией. \end{DoxyCompactList}\item 
+vector$<$ int $>$ \doxymbox{\hyperlink{class_hash_table_a268a44422f1218a3a04fa374437c11a7}{search\+All}} (const Player \&target) const
+\begin{DoxyCompactList}\small\item\em Найти все вхождения по объекту Player. \end{DoxyCompactList}\item 
+long long \doxymbox{\hyperlink{class_hash_table_ac66f4112c565ea71db9563e71c455e4a}{get\+Collisions}} () const
+\begin{DoxyCompactList}\small\item\em Получить количество коллизий, возникших при построении таблицы. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Класс хеш-\/таблицы для поиска объектов Player по ключу. В качестве ключа используется первое нечисловое поле объекта Player, а именно ФИО игрока. Хеш-\/таблица реализована методом цепочек:\+ каждая ячейка таблицы хранит список элементов, попавших в одну корзину. В узлах таблицы хранятся:\+ 
+
+
+\begin{DoxyItemize}
+\item ключ;
+\item список индексов элементов исходного массива с данным ключом. Если в массиве несколько объектов с одинаковым ключом, они не создают новые записи, а их индексы добавляются в вектор indices уже существующей записи. 
+\end{DoxyItemize}
+
+\label{doc-constructors}
+\Hypertarget{class_hash_table_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_hash_table_afdffa6220be047199b778f5a72d61a7f}\index{HashTable@{HashTable}!HashTable@{HashTable}}
+\index{HashTable@{HashTable}!HashTable@{HashTable}}
+\doxysubsubsection{\texorpdfstring{HashTable()}{HashTable()}}
+{\footnotesize\ttfamily \label{class_hash_table_afdffa6220be047199b778f5a72d61a7f} 
+Hash\+Table::\+\+Hash\+Table (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{size}{ = {\ttfamily 100003}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Конструктор хеш-\/таблицы. Создает таблицу заданного размера. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em size} & Размер таблицы. Желательно выбирать больше числа элементов. \\
+\hline
+\end{DoxyParams}
+
+
+\label{doc-func-members}
+\Hypertarget{class_hash_table_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_hash_table_a0fa3fd9208b7f3e89dde81689c3ed6cd}\index{HashTable@{HashTable}!build@{build}}
+\index{build@{build}!HashTable@{HashTable}}
+\doxysubsubsection{\texorpdfstring{build()}{build()}}
+{\footnotesize\ttfamily \label{class_hash_table_a0fa3fd9208b7f3e89dde81689c3ed6cd} 
+void Hash\+Table::\+build (\begin{DoxyParamCaption}\item[{Player}]{a}{\+[$\,$]\+, }\item[{long}]{size}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Построить хеш-\/таблицу по массиву объектов Player. Перед построением старая таблица очищается. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & Массив объектов Player. \\
+\hline
+{\em size} & Размер массива. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_hash_table_ac66f4112c565ea71db9563e71c455e4a}\index{HashTable@{HashTable}!getCollisions@{getCollisions}}
+\index{getCollisions@{getCollisions}!HashTable@{HashTable}}
+\doxysubsubsection{\texorpdfstring{getCollisions()}{getCollisions()}}
+{\footnotesize\ttfamily \label{class_hash_table_ac66f4112c565ea71db9563e71c455e4a} 
+long long Hash\+Table::\+get\+Collisions (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Получить количество коллизий, возникших при построении таблицы. 
+
+\begin{DoxyReturn}{Returns}
+Число коллизий. 
+\end{DoxyReturn}
+\Hypertarget{class_hash_table_a5de16f1ceef01c13ac14fda32ccb921e}\index{HashTable@{HashTable}!insert@{insert}}
+\index{insert@{insert}!HashTable@{HashTable}}
+\doxysubsubsection{\texorpdfstring{insert()}{insert()}}
+{\footnotesize\ttfamily \label{class_hash_table_a5de16f1ceef01c13ac14fda32ccb921e} 
+void Hash\+Table::\+insert (\begin{DoxyParamCaption}\item[{const Player \&}]{player}{, }\item[{int}]{index}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Вставить элемент массива в хеш-\/таблицу. Если ключ уже существует в соответствующей корзине, новый индекс добавляется в список indices существующей записи. Если корзина уже содержит записи с другими ключами, это считается коллизией. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em player} & Объект Player. \\
+\hline
+{\em index} & Индекс объекта в исходном массиве. \\
+\hline
+\end{DoxyParams}
+Если корзина не пустая, это коллизия
+
+Но если ключ уже есть, это не новая коллизия "{}разных ключей"{}
+
+Добавляем новый ключ\Hypertarget{class_hash_table_a268a44422f1218a3a04fa374437c11a7}\index{HashTable@{HashTable}!searchAll@{searchAll}}
+\index{searchAll@{searchAll}!HashTable@{HashTable}}
+\doxysubsubsection{\texorpdfstring{searchAll()}{searchAll()}}
+{\footnotesize\ttfamily \label{class_hash_table_a268a44422f1218a3a04fa374437c11a7} 
+vector$<$ int $>$ Hash\+Table::\+search\+All (\begin{DoxyParamCaption}\item[{const Player \&}]{target}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Найти все вхождения по объекту Player. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em target} & Объект Player, ключ которого используется для поиска. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Вектор индексов всех найденных элементов. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+Hash\+Table.\+h\end{DoxyCompactItemize}

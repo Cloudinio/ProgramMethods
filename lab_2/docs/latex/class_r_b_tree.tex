@@ -1,0 +1,119 @@
+\doxysection{RBTree Class Reference}
+\hypertarget{class_r_b_tree}{}\label{class_r_b_tree}\index{RBTree@{RBTree}}
+
+
+Класс красно-\/черного дерева для поиска объектов Player по ключу. В качестве ключа используется первое нечисловое поле объекта Player, а именно ФИО игрока. Каждый узел дерева хранит:\+  
+
+
+
+
+{\ttfamily \+\#include $<$RBTree.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_r_b_tree_ad5b67b1bf4c652167ac03a0070dd9d5e}\label{class_r_b_tree_ad5b67b1bf4c652167ac03a0070dd9d5e} 
+{\bfseries RBTree} ()=default
+\begin{DoxyCompactList}\small\item\em Конструктор красно-\/черного дерева по умолчанию. \end{DoxyCompactList}\item 
+\Hypertarget{class_r_b_tree_abab51e54e07c1adf0ca0c9a5d466427b}\label{class_r_b_tree_abab51e54e07c1adf0ca0c9a5d466427b} 
+{\bfseries \texorpdfstring{$\sim$}{\string~}\+RBTree} ()
+\begin{DoxyCompactList}\small\item\em Деструктор красно-\/черного дерева. Освобождает всю память, выделенную под узлы дерева. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_r_b_tree_a7698bc88be122ce53ceb2a405b387499}{build}} (Player a\+[$\,$]\+, long size)
+\begin{DoxyCompactList}\small\item\em Построить красно-\/черное дерево по массиву объектов Player. Перед построением старое дерево очищается. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_r_b_tree_a0f5a928251476434bffd013fd4cbae9e}{insert}} (const Player \&player, int index)
+\begin{DoxyCompactList}\small\item\em Вставить элемент в красно-\/черное дерево. Если ключ уже существует, новый узел не создается, а индекс элемента добавляется в список indices существующего узла. \end{DoxyCompactList}\item 
+vector$<$ int $>$ \doxymbox{\hyperlink{class_r_b_tree_ab7e40bb2e218fd06cf1bf801cde7456d}{search\+All}} (const string \&key) const
+\begin{DoxyCompactList}\small\item\em Найти все вхождения по строковому ключу. \end{DoxyCompactList}\item 
+vector$<$ int $>$ \doxymbox{\hyperlink{class_r_b_tree_a257d6fc5bf3bb34e272f7e6c172063e3}{search\+All}} (const Player \&target) const
+\begin{DoxyCompactList}\small\item\em Найти все вхождения по объекту Player. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Класс красно-\/черного дерева для поиска объектов Player по ключу. В качестве ключа используется первое нечисловое поле объекта Player, а именно ФИО игрока. Каждый узел дерева хранит:\+ 
+
+
+\begin{DoxyItemize}
+\item строковый ключ;
+\item список индексов элементов исходного массива с таким ключом;
+\item цвет узла;
+\item ссылки на потомков и родителя. Если в исходном массиве встречаются одинаковые ключи, они не создают новые узлы, а добавляются в вектор indices существующего узла. 
+\end{DoxyItemize}
+
+\label{doc-func-members}
+\Hypertarget{class_r_b_tree_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_r_b_tree_a7698bc88be122ce53ceb2a405b387499}\index{RBTree@{RBTree}!build@{build}}
+\index{build@{build}!RBTree@{RBTree}}
+\doxysubsubsection{\texorpdfstring{build()}{build()}}
+{\footnotesize\ttfamily \label{class_r_b_tree_a7698bc88be122ce53ceb2a405b387499} 
+void RBTree::\+build (\begin{DoxyParamCaption}\item[{Player}]{a}{\+[$\,$]\+, }\item[{long}]{size}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Построить красно-\/черное дерево по массиву объектов Player. Перед построением старое дерево очищается. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & Массив объектов Player. \\
+\hline
+{\em size} & Размер массива. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_r_b_tree_a0f5a928251476434bffd013fd4cbae9e}\index{RBTree@{RBTree}!insert@{insert}}
+\index{insert@{insert}!RBTree@{RBTree}}
+\doxysubsubsection{\texorpdfstring{insert()}{insert()}}
+{\footnotesize\ttfamily \label{class_r_b_tree_a0f5a928251476434bffd013fd4cbae9e} 
+void RBTree::\+insert (\begin{DoxyParamCaption}\item[{const Player \&}]{player}{, }\item[{int}]{index}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Вставить элемент в красно-\/черное дерево. Если ключ уже существует, новый узел не создается, а индекс элемента добавляется в список indices существующего узла. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em player} & Объект Player. \\
+\hline
+{\em index} & Индекс объекта в исходном массиве. \\
+\hline
+\end{DoxyParams}
+Такой ключ уже есть -\/\texorpdfstring{$>$}{>} просто добавляем индекс\Hypertarget{class_r_b_tree_a257d6fc5bf3bb34e272f7e6c172063e3}\index{RBTree@{RBTree}!searchAll@{searchAll}}
+\index{searchAll@{searchAll}!RBTree@{RBTree}}
+\doxysubsubsection{\texorpdfstring{searchAll()}{searchAll()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_r_b_tree_a257d6fc5bf3bb34e272f7e6c172063e3} 
+vector$<$ int $>$ RBTree::\+search\+All (\begin{DoxyParamCaption}\item[{const Player \&}]{target}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Найти все вхождения по объекту Player. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em target} & Объект Player, ключ которого используется для поиска. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Вектор индексов всех найденных элементов. 
+\end{DoxyReturn}
+\Hypertarget{class_r_b_tree_ab7e40bb2e218fd06cf1bf801cde7456d}\index{RBTree@{RBTree}!searchAll@{searchAll}}
+\index{searchAll@{searchAll}!RBTree@{RBTree}}
+\doxysubsubsection{\texorpdfstring{searchAll()}{searchAll()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_r_b_tree_ab7e40bb2e218fd06cf1bf801cde7456d} 
+vector$<$ int $>$ RBTree::\+search\+All (\begin{DoxyParamCaption}\item[{const string \&}]{key}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Найти все вхождения по строковому ключу. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em key} & Искомый ключ. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Вектор индексов всех найденных элементов. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+RBTree.\+h\end{DoxyCompactItemize}
