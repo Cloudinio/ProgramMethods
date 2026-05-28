@@ -41,9 +41,9 @@ public:
     }
 
     uint32_t nextU32() {
-        uint64_t prod = uint64_t(x) * uint64_t(y);
+        uint64_t prod = static_cast<uint64_t>(x) * static_cast<uint64_t>(y);
 
-        uint32_t middle = uint32_t((prod >> 16) & 0xFFFFFFFFu);
+        uint32_t middle = static_cast<uint32_t>((prod >> 16) & 0xFFFFFFFFu);
 
         middle ^= middle << 13;
         middle ^= middle >> 17;
@@ -96,7 +96,7 @@ public:
 
         z ^= z >> 31;
 
-        return uint32_t(z >> 32);
+        return static_cast<uint32_t>(z >> 32);
     }
 
     string name() {
@@ -185,7 +185,7 @@ BasicStats basicStats(const vector<double>& v) {
 
     double var = 0.0;
 
-    for (int i = 0; i < v.size(); i++) {
+    for (int i = 0; i < static_cast<int>(v.size()); i++) {
         var += (v[i] - mean) * (v[i] - mean);
     }
 
@@ -271,14 +271,14 @@ double chiSquareCritical(int df, double p) {
 
 // Проверка равномерности распределения по критерию хи-квадрат
 ChiResult chiUniform(const vector<double>& v) {
-    int N = v.size();
+    int N = static_cast<int>(v.size());
 
-    int k = max(5, (int)ceil(1.0 + log2((double)N)));
+    int k = max(5, static_cast<int>(ceil(1.0 + log2(static_cast<double>(N)))));
 
     vector<int> cnt(k, 0);
 
-    for (int i = 0; i < (int)v.size(); i++) {
-        int id = int(v[i] * k);
+    for (int i = 0; i < static_cast<int>(v.size()); i++) {
+        int id = static_cast<int>(v[i] * k);
 
         if (id < 0) {
             id = 0;
@@ -291,7 +291,7 @@ ChiResult chiUniform(const vector<double>& v) {
         cnt[id]++;
     }
 
-    double expected = double(N) / k;
+    double expected = static_cast<double>(N) / k;
 
     double chi2 = 0.0;
 
@@ -320,7 +320,7 @@ vector<uint8_t> bitsFromNumbers(const vector<uint32_t>& nums) {
 
     bits.reserve(nums.size() * 32);
 
-    for (int i = 0; i < (int)nums.size(); i++) {
+    for (int i = 0; i < static_cast<int>(nums.size()); i++) {
         uint32_t x = nums[i];
 
         for (int b = 31; b >= 0; b--) {
@@ -336,11 +336,11 @@ vector<uint8_t> bitsFromNumbers(const vector<uint32_t>& nums) {
 TestResult bitFrequency(const vector<uint8_t>& bits) {
     int64_t ones = 0;
 
-    for (int i = 0; i < (int)bits.size(); i++) {
+    for (int i = 0; i < static_cast<int>(bits.size()); i++) {
         ones += bits[i];
     }
 
-    double n = bits.size();
+    double n = static_cast<double>(bits.size());
 
     double z = (ones - n / 2.0) / sqrt(n / 4.0);
 
@@ -358,13 +358,13 @@ TestResult bitFrequency(const vector<uint8_t>& bits) {
 TestResult bitRuns(const vector<uint8_t>& bits) {
     int runs = 1;
 
-    for (int i = 1; i < (int)bits.size(); i++) {
+    for (int i = 1; i < static_cast<int>(bits.size()); i++) {
         if (bits[i] != bits[i - 1]) {
             runs++;
         }
     }
 
-    double n = bits.size();
+    double n = static_cast<double>(bits.size());
 
     double expected = (2 * n - 1) / 2.0;
     double var = (2 * n - 1) / 4.0;
@@ -385,12 +385,12 @@ TestResult bitRuns(const vector<uint8_t>& bits) {
 TestResult serial2(const vector<uint8_t>& bits) {
     int cnt[4] = {0, 0, 0, 0};
 
-    for (int i = 0; i + 1 < (int)bits.size(); i += 2) {
+    for (int i = 0; i + 1 < static_cast<int>(bits.size()); i += 2) {
         int id = bits[i] * 2 + bits[i + 1];
         cnt[id]++;
     }
 
-    double n = bits.size() / 2.0;
+    double n = static_cast<double>(bits.size()) / 2.0;
     double exp = n / 4.0;
     double chi2 = 0.0;
 
@@ -419,7 +419,7 @@ TestResult poker4(const vector<uint8_t>& bits) {
         cnt[i] = 0;
     }
 
-    int blocks = bits.size() / 4;
+    int blocks = static_cast<int>(bits.size()) / 4;
 
     for (int i = 0; i < blocks; i++) {
         int value = 0;
@@ -463,7 +463,7 @@ TestResult overlappingPermutations(const vector<double>& v) {
 
     int windows = 0;
 
-    for (int i = 0; i + 4 < (int)v.size(); i++) {
+    for (int i = 0; i + 4 < static_cast<int>(v.size()); i++) {
         pair<double, int> a[5];
 
         for (int j = 0; j < 5; j++) {
@@ -520,7 +520,7 @@ TestResult overlappingPermutations(const vector<double>& v) {
 TestResult birthdaySpacings(const vector<double>& v) {
     const int m = 1 << 20;
 
-    int n = (int)v.size();
+    int n = static_cast<int>(v.size());
 
     if (n > 512) {
         n = 512;
@@ -529,7 +529,7 @@ TestResult birthdaySpacings(const vector<double>& v) {
     vector<int> xs(n);
 
     for (int i = 0; i < n; i++) {
-        xs[i] = int(v[i] * m);
+        xs[i] = static_cast<int>(v[i] * m);
 
         if (xs[i] > m - 1) {
             xs[i] = m - 1;
@@ -548,7 +548,7 @@ TestResult birthdaySpacings(const vector<double>& v) {
 
     int collisions = 0;
 
-    for (int i = 1; i < (int)spacings.size(); i++) {
+    for (int i = 1; i < static_cast<int>(spacings.size()); i++) {
         if (spacings[i] == spacings[i - 1]) {
             collisions++;
         }
@@ -594,9 +594,9 @@ void processModifiedMiddleProductXor(
     uint64_t seed = 1234567ULL + 1000003ULL * sampleNumber;
 
     ModifiedMiddleProductXor gen(
-        uint32_t(seed),
-        uint32_t(seed * 1664525u + 1013904223u)
-    );
+    static_cast<uint32_t>(seed),
+    static_cast<uint32_t>(seed * 1664525u + 1013904223u)
+);
 
     vector<uint32_t> nums;
     vector<double> vals;
@@ -617,7 +617,7 @@ void processModifiedMiddleProductXor(
 
     int passed = 0;
 
-    for (int i = 0; i < (int)tests.size(); i++) {
+    for (int i = 0; i < static_cast<int>(tests.size()); i++) {
         if (tests[i].pass) {
             passed++;
         }
@@ -638,7 +638,7 @@ void processModifiedMiddleProductXor(
             << tests.size()
             << "\n";
 
-    for (int i = 0; i < (int)tests.size(); i++) {
+    for (int i = 0; i < static_cast<int>(tests.size()); i++) {
         testsCsv << gen.name() << ','
                  << sampleNumber + 1 << ','
                  << tests[i].test << ','
@@ -679,7 +679,7 @@ void processModifiedLCGPermuted(
 
     int passed = 0;
 
-    for (int i = 0; i < (int)tests.size(); i++) {
+    for (int i = 0; i < static_cast<int>(tests.size()); i++) {
         if (tests[i].pass) {
             passed++;
         }
@@ -700,7 +700,7 @@ void processModifiedLCGPermuted(
             << tests.size()
             << "\n";
 
-    for (int i = 0; i < (int)tests.size(); i++) {
+    for (int i = 0; i < static_cast<int>(tests.size()); i++) {
         testsCsv << gen.name() << ','
                  << sampleNumber + 1 << ','
                  << tests[i].test << ','
@@ -720,7 +720,7 @@ void processXorShift32Salt(
 ) {
     uint64_t seed = 1234567ULL + 1000003ULL * sampleNumber + 1822ULL;
 
-    XorShift32Salt gen{uint32_t(seed)};
+    XorShift32Salt gen{static_cast<uint32_t>(seed)};
 
     vector<uint32_t> nums;
     vector<double> vals;
@@ -741,7 +741,7 @@ void processXorShift32Salt(
 
     int passed = 0;
 
-    for (int i = 0; i < (int)tests.size(); i++) {
+    for (int i = 0; i < static_cast<int>(tests.size()); i++) {
         if (tests[i].pass) {
             passed++;
         }
@@ -762,7 +762,7 @@ void processXorShift32Salt(
             << tests.size()
             << "\n";
 
-    for (int i = 0; i < (int)tests.size(); i++) {
+    for (int i = 0; i < static_cast<int>(tests.size()); i++) {
         testsCsv << gen.name() << ','
                  << sampleNumber + 1 << ','
                  << tests[i].test << ','
@@ -777,8 +777,8 @@ void processXorShift32Salt(
 
 void speedModifiedMiddleProductXor(ofstream& speed, int N) {
     ModifiedMiddleProductXor gen(
-        uint32_t(987654321ULL),
-        uint32_t(987654321ULL * 1664525u + 1013904223u)
+        static_cast<uint32_t>(987654321ULL),
+        static_cast<uint32_t>(987654321ULL * 1664525u + 1013904223u)
     );
 
     high_resolution_clock::time_point t1 = high_resolution_clock::now();
@@ -811,7 +811,7 @@ void speedModifiedLCGPermuted(ofstream& speed, int N) {
 }
 
 void speedXorShift32Salt(ofstream& speed, int N) {
-    XorShift32Salt gen(uint32_t(987654321ULL + 2ULL));
+    XorShift32Salt gen{static_cast<uint32_t>(987654321ULL + 2ULL)};
 
     high_resolution_clock::time_point t1 = high_resolution_clock::now();
 
@@ -827,7 +827,7 @@ void speedXorShift32Salt(ofstream& speed, int N) {
 }
 
 void speedStdMT19937(ofstream& speed, int N) {
-    StdMT19937 gen(uint32_t(987654321ULL + 3ULL));
+    StdMT19937 gen{static_cast<uint32_t>(987654321ULL + 3ULL)};
 
     high_resolution_clock::time_point t1 = high_resolution_clock::now();
 
