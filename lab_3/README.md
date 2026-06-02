@@ -8,6 +8,6 @@
 
 [GitHub](https://github.com/Cloudinio/ProgramMethods/tree/main/lab_3)
 
-## Графики
+## Графики 
 
 ![Зависимость времени генерации от размера выборки](speed_by_sample_size.png)
