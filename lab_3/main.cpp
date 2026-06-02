@@ -1,3 +1,12 @@
+/**
+ * @file main.cpp
+ * @brief Лабораторная работа по сравнению генераторов псевдослучайных чисел.
+ *
+ * В программе реализованы три собственных генератора псевдослучайных чисел,
+ * стандартный генератор std::mt19937, статистические тесты качества генерации
+ * и замер времени работы генераторов.
+ */
+
 #include <algorithm>
 #include <array>
 #include <chrono>
@@ -13,17 +22,41 @@
 using namespace std;
 using namespace chrono;
 
+/**
+ * @brief Значение 2^32.
+ *
+ * Используется для нормировки 32-битных целых чисел в диапазон [0; 1).
+ */
 const double TWO32 = 4294967296.0;
+
+/**
+ * @brief Малое число для защиты от деления на ноль.
+ */
 const double EPS = 1e-12;
 
-// Модифицированный метод серединных произведений + xorshift-перемешивание
+/**
+ * @brief Модифицированный метод серединных произведений с xorshift-перемешиванием.
+ *
+ * Генератор использует два предыдущих значения, перемножает их,
+ * берёт средние 32 бита произведения, а затем дополнительно
+ * перемешивает результат с помощью xorshift и соли.
+ */
 class ModifiedMiddleProductXor {
 private:
-    uint32_t x;
-    uint32_t y;
-    uint32_t salt;
+    uint32_t x;     ///< Первое внутреннее состояние генератора.
+    uint32_t y;     ///< Второе внутреннее состояние генератора.
+    uint32_t salt;  ///< Добавочная соль для перемешивания результата.
 
 public:
+    /**
+     * @brief Создаёт генератор с двумя начальными значениями.
+     *
+     * Если одно из начальных значений равно нулю, оно заменяется
+     * на заранее заданное ненулевое значение.
+     *
+     * @param seed1 Первое начальное значение генератора.
+     * @param seed2 Второе начальное значение генератора.
+     */
     ModifiedMiddleProductXor(uint32_t seed1, uint32_t seed2) {
         if (seed1 != 0) {
             x = seed1;
@@ -40,6 +73,11 @@ public:
         salt = 0x9E3779B9u;
     }
 
+    /**
+     * @brief Генерирует следующее 32-битное псевдослучайное число.
+     *
+     * @return Следующее значение генератора типа uint32_t.
+     */
     uint32_t nextU32() {
         uint64_t prod = static_cast<uint64_t>(x) * static_cast<uint64_t>(y);
 
@@ -64,17 +102,34 @@ public:
         return y;
     }
 
+    /**
+     * @brief Возвращает название генератора.
+     *
+     * @return Строка с названием генератора.
+     */
     string name() {
         return "ModifiedMiddleProductXor";
     }
 };
 
-// Модифицированный линейный конгруэнтный генератор c перемешиванием
+/**
+ * @brief Модифицированный линейный конгруэнтный генератор с перемешиванием.
+ *
+ * Генератор обновляет 64-битное состояние по формуле LCG, после чего
+ * применяет дополнительное битовое перемешивание результата.
+ */
 class ModifiedLCGPermuted {
 private:
-    uint64_t state;
+    uint64_t state; ///< Текущее 64-битное состояние генератора.
 
 public:
+    /**
+     * @brief Создаёт генератор с заданным начальным состоянием.
+     *
+     * Если seed равен нулю, используется значение 1.
+     *
+     * @param seed Начальное состояние генератора.
+     */
     ModifiedLCGPermuted(uint64_t seed) {
         if (seed != 0) {
             state = seed;
@@ -83,6 +138,14 @@ public:
         }
     }
 
+    /**
+     * @brief Генерирует следующее 32-битное псевдослучайное число.
+     *
+     * Сначала обновляется состояние LCG, затем результат дополнительно
+     * перемешивается с помощью XOR, сдвигов и умножений.
+     *
+     * @return Следующее значение генератора типа uint32_t.
+     */
     uint32_t nextU32() {
         state = state * 6364136223846793005ULL + 1442695040888963407ULL;
 
@@ -99,18 +162,35 @@ public:
         return static_cast<uint32_t>(z >> 32);
     }
 
+    /**
+     * @brief Возвращает название генератора.
+     *
+     * @return Строка с названием генератора.
+     */
     string name() {
         return "ModifiedLCGPermuted";
     }
 };
 
-// Генератор с XOR-перемешиванием с добавлением соли
+/**
+ * @brief Генератор на основе xorshift32 с добавочной солью.
+ *
+ * Генератор применяет xorshift-перемешивание к внутреннему состоянию,
+ * после чего добавляет изменяющуюся соль.
+ */
 class XorShift32Salt {
 private:
-    uint32_t x;
-    uint32_t w;
+    uint32_t x; ///< Основное состояние xorshift-генератора.
+    uint32_t w; ///< Добавочная соль.
 
 public:
+    /**
+     * @brief Создаёт генератор с заданным начальным значением.
+     *
+     * Если seed равен нулю, используется заранее заданное ненулевое значение.
+     *
+     * @param seed Начальное значение генератора.
+     */
     XorShift32Salt(uint32_t seed) {
         if (seed != 0) {
             x = seed;
@@ -121,6 +201,11 @@ public:
         w = 0x9E3779B9u;
     }
 
+    /**
+     * @brief Генерирует следующее 32-битное псевдослучайное число.
+     *
+     * @return Следующее значение генератора типа uint32_t.
+     */
     uint32_t nextU32() {
         x ^= x << 13;
         x ^= x >> 17;
@@ -131,57 +216,100 @@ public:
         return x + w;
     }
 
+    /**
+     * @brief Возвращает название генератора.
+     *
+     * @return Строка с названием генератора.
+     */
     string name() {
         return "XorShift32Salt";
     }
 };
 
-// Стандартный генератор Mersenne Twister
+/**
+ * @brief Обёртка над стандартным генератором std::mt19937.
+ *
+ * Используется для сравнения скорости работы собственных генераторов
+ * со стандартным генератором Mersenne Twister.
+ */
 class StdMT19937 {
 private:
-    mt19937 mt;
+    mt19937 mt; ///< Стандартный генератор Mersenne Twister.
 
 public:
+    /**
+     * @brief Создаёт генератор std::mt19937 с заданным seed.
+     *
+     * @param seed Начальное значение генератора.
+     */
     StdMT19937(uint32_t seed) {
         mt.seed(seed);
     }
 
+    /**
+     * @brief Генерирует следующее 32-битное псевдослучайное число.
+     *
+     * @return Следующее значение генератора типа uint32_t.
+     */
     uint32_t nextU32() {
         return mt();
     }
 
+    /**
+     * @brief Возвращает название генератора.
+     *
+     * @return Строка с названием генератора.
+     */
     string name() {
         return "std_mt19937";
     }
 };
 
-
+/**
+ * @brief Основные статистические характеристики выборки.
+ */
 struct BasicStats {
-    double mean;
-    double stddev;
-    double cv;
+    double mean;   ///< Среднее значение выборки.
+    double stddev; ///< Стандартное отклонение выборки.
+    double cv;     ///< Коэффициент вариации.
 };
 
+/**
+ * @brief Результат проверки равномерности по критерию хи-квадрат.
+ */
 struct ChiResult {
-    int bins;
-    double chi2;
-    double low;
-    double high;
-    bool pass;
+    int bins;     ///< Количество интервалов.
+    double chi2;  ///< Значение статистики хи-квадрат.
+    double low;   ///< Нижняя критическая граница.
+    double high;  ///< Верхняя критическая граница.
+    bool pass;    ///< true, если тест пройден.
 };
 
+/**
+ * @brief Общий формат результата статистического теста.
+ */
 struct TestResult {
-    string test;
-    double statistic;
-    double low;
-    double high;
-    bool pass;
+    string test;      ///< Название теста.
+    double statistic; ///< Значение статистики теста.
+    double low;       ///< Нижняя допустимая граница.
+    double high;      ///< Верхняя допустимая граница.
+    bool pass;        ///< true, если тест пройден.
 };
 
-
-// Считает среднее, стандартное отклонение и коэффициент вариации
+/**
+ * @brief Считает среднее, стандартное отклонение и коэффициент вариации.
+ *
+ * @param v Выборка вещественных чисел.
+ * @return Структура BasicStats с рассчитанными статистиками.
+ */
 BasicStats basicStats(const vector<double>& v) {
-    double mean = accumulate(v.begin(), v.end(), 0.0) / v.size();
+    double sum = 0.0;
+
+    for (int i = 0; i < static_cast<int>(v.size()); i++) {
+        sum += v[i];
+    }
+
+    double mean = sum / v.size();
 
     double var = 0.0;
 
@@ -201,7 +329,15 @@ BasicStats basicStats(const vector<double>& v) {
     return result;
 }
 
-// Приближённая обратная функция нормального распределения (аппроксимация Peter J. Acklam)
+/**
+ * @brief Приближённая обратная функция стандартного нормального распределения.
+ *
+ * Используется аппроксимация Peter J. Acklam.
+ * Функция нужна для приближённого вычисления критических значений хи-квадрат.
+ *
+ * @param p Вероятность, для которой ищется квантиль нормального распределения.
+ * @return Приближённое значение квантиля стандартного нормального распределения.
+ */
 double invNorm(double p) {
     const double a[] = {
         -3.969683028665376e+01,
@@ -260,7 +396,15 @@ double invNorm(double p) {
            (((((b[0] * r + b[1]) * r + b[2]) * r + b[3]) * r + b[4]) * r + 1);
 }
 
-// Приближённое критическое значение хи-квадрат
+/**
+ * @brief Приближённо вычисляет критическое значение распределения хи-квадрат.
+ *
+ * Используется приближение через обратную функцию нормального распределения.
+ *
+ * @param df Число степеней свободы.
+ * @param p Вероятность, соответствующая нужному квантилю.
+ * @return Приближённое критическое значение хи-квадрат.
+ */
 double chiSquareCritical(int df, double p) {
     double z = invNorm(p);
 
@@ -269,7 +413,15 @@ double chiSquareCritical(int df, double p) {
     return df * x * x * x;
 }
 
-// Проверка равномерности распределения по критерию хи-квадрат
+/**
+ * @brief Проверяет равномерность распределения по критерию хи-квадрат.
+ *
+ * Диапазон [0; 1) разбивается на несколько интервалов, после чего
+ * сравниваются наблюдаемые и ожидаемые частоты попаданий.
+ *
+ * @param v Выборка вещественных чисел из диапазона [0; 1).
+ * @return Результат проверки хи-квадрат.
+ */
 ChiResult chiUniform(const vector<double>& v) {
     int N = static_cast<int>(v.size());
 
@@ -314,7 +466,14 @@ ChiResult chiUniform(const vector<double>& v) {
     return result;
 }
 
-// Преобразует массив 32-битных чисел в последовательность битов
+/**
+ * @brief Преобразует массив 32-битных чисел в последовательность битов.
+ *
+ * Каждое число uint32_t преобразуется в 32 отдельных бита.
+ *
+ * @param nums Массив 32-битных чисел.
+ * @return Вектор битов, представленных значениями 0 и 1.
+ */
 vector<uint8_t> bitsFromNumbers(const vector<uint32_t>& nums) {
     vector<uint8_t> bits;
 
@@ -331,8 +490,14 @@ vector<uint8_t> bitsFromNumbers(const vector<uint32_t>& nums) {
     return bits;
 }
 
-
-// NIST frequency test
+/**
+ * @brief Частотный битовый тест NIST.
+ *
+ * Проверяет, примерно ли одинаково часто встречаются биты 0 и 1.
+ *
+ * @param bits Последовательность битов.
+ * @return Результат теста.
+ */
 TestResult bitFrequency(const vector<uint8_t>& bits) {
     int64_t ones = 0;
 
@@ -354,7 +519,14 @@ TestResult bitFrequency(const vector<uint8_t>& bits) {
     return result;
 }
 
-// NIST runs test
+/**
+ * @brief Тест серий битов.
+ *
+ * Проверяет количество непрерывных серий одинаковых битов.
+ *
+ * @param bits Последовательность битов.
+ * @return Результат теста.
+ */
 TestResult bitRuns(const vector<uint8_t>& bits) {
     int runs = 1;
 
@@ -381,7 +553,15 @@ TestResult bitRuns(const vector<uint8_t>& bits) {
     return result;
 }
 
-// Serial 2-bit test
+/**
+ * @brief Serial 2-bit test.
+ *
+ * Проверяет равномерность появления непересекающихся пар битов:
+ * 00, 01, 10 и 11.
+ *
+ * @param bits Последовательность битов.
+ * @return Результат теста.
+ */
 TestResult serial2(const vector<uint8_t>& bits) {
     int cnt[4] = {0, 0, 0, 0};
 
@@ -411,7 +591,14 @@ TestResult serial2(const vector<uint8_t>& bits) {
     return result;
 }
 
-// Diehard monkey / poker test для 4-битных слов
+/**
+ * @brief Poker test для 4-битных слов.
+ *
+ * Проверяет равномерность появления 16 возможных 4-битных блоков.
+ *
+ * @param bits Последовательность битов.
+ * @return Результат теста.
+ */
 TestResult poker4(const vector<uint8_t>& bits) {
     int cnt[16];
 
@@ -451,7 +638,15 @@ TestResult poker4(const vector<uint8_t>& bits) {
     return result;
 }
 
-// Diehard overlapping permutations test
+/**
+ * @brief Diehard-подобный тест перекрывающихся перестановок.
+ *
+ * Берёт окна из пяти соседних чисел и проверяет равномерность
+ * появления всех возможных перестановок порядка этих чисел.
+ *
+ * @param v Выборка вещественных чисел.
+ * @return Результат теста.
+ */
 TestResult overlappingPermutations(const vector<double>& v) {
     int cnt[120];
 
@@ -516,7 +711,16 @@ TestResult overlappingPermutations(const vector<double>& v) {
     return result;
 }
 
-// Diehard birthday spacings test
+/**
+ * @brief Упрощённый Diehard birthday spacings test.
+ *
+ * Преобразует числа из [0; 1) в дискретные точки, сортирует их,
+ * считает расстояния между соседними точками и проверяет число
+ * совпадающих расстояний.
+ *
+ * @param v Выборка вещественных чисел.
+ * @return Результат теста.
+ */
 TestResult birthdaySpacings(const vector<double>& v) {
     const int m = 1 << 20;
 
@@ -568,7 +772,13 @@ TestResult birthdaySpacings(const vector<double>& v) {
     return result;
 }
 
-// Запускает все NIST/Diehard-подобные тесты для одной выборки
+/**
+ * @brief Запускает все NIST/Diehard-подобные тесты для одной выборки.
+ *
+ * @param nums Исходные 32-битные числа генератора.
+ * @param vals Те же числа, нормированные в диапазон [0; 1).
+ * @return Вектор результатов всех тестов.
+ */
 vector<TestResult> allTests(const vector<uint32_t>& nums, const vector<double>& vals) {
     vector<uint8_t> bits = bitsFromNumbers(nums);
 
@@ -584,7 +794,14 @@ vector<TestResult> allTests(const vector<uint32_t>& nums, const vector<double>& 
     return results;
 }
 
-
+/**
+ * @brief Создаёт выборку для ModifiedMiddleProductXor и записывает результаты тестов.
+ *
+ * @param summary Файл общей сводки результатов.
+ * @param testsCsv Файл подробных результатов тестов.
+ * @param sampleSize Размер одной выборки.
+ * @param sampleNumber Номер выборки.
+ */
 void processModifiedMiddleProductXor(
     ofstream& summary,
     ofstream& testsCsv,
@@ -650,6 +867,14 @@ void processModifiedMiddleProductXor(
     }
 }
 
+/**
+ * @brief Создаёт выборку для ModifiedLCGPermuted и записывает результаты тестов.
+ *
+ * @param summary Файл общей сводки результатов.
+ * @param testsCsv Файл подробных результатов тестов.
+ * @param sampleSize Размер одной выборки.
+ * @param sampleNumber Номер выборки.
+ */
 void processModifiedLCGPermuted(
     ofstream& summary,
     ofstream& testsCsv,
@@ -712,6 +937,14 @@ void processModifiedLCGPermuted(
     }
 }
 
+/**
+ * @brief Создаёт выборку для XorShift32Salt и записывает результаты тестов.
+ *
+ * @param summary Файл общей сводки результатов.
+ * @param testsCsv Файл подробных результатов тестов.
+ * @param sampleSize Размер одной выборки.
+ * @param sampleNumber Номер выборки.
+ */
 void processXorShift32Salt(
     ofstream& summary,
     ofstream& testsCsv,
@@ -774,7 +1007,12 @@ void processXorShift32Salt(
     }
 }
 
-
+/**
+ * @brief Измеряет время генерации N чисел для ModifiedMiddleProductXor.
+ *
+ * @param speed Файл для записи результатов замера скорости.
+ * @param N Количество генерируемых чисел.
+ */
 void speedModifiedMiddleProductXor(ofstream& speed, int N) {
     ModifiedMiddleProductXor gen(
         static_cast<uint32_t>(987654321ULL),
@@ -794,6 +1032,12 @@ void speedModifiedMiddleProductXor(ofstream& speed, int N) {
     speed << gen.name() << ',' << N << ',' << ms << "\n";
 }
 
+/**
+ * @brief Измеряет время генерации N чисел для ModifiedLCGPermuted.
+ *
+ * @param speed Файл для записи результатов замера скорости.
+ * @param N Количество генерируемых чисел.
+ */
 void speedModifiedLCGPermuted(ofstream& speed, int N) {
     ModifiedLCGPermuted gen(987654321ULL + 1ULL);
 
@@ -810,6 +1054,12 @@ void speedModifiedLCGPermuted(ofstream& speed, int N) {
     speed << gen.name() << ',' << N << ',' << ms << "\n";
 }
 
+/**
+ * @brief Измеряет время генерации N чисел для XorShift32Salt.
+ *
+ * @param speed Файл для записи результатов замера скорости.
+ * @param N Количество генерируемых чисел.
+ */
 void speedXorShift32Salt(ofstream& speed, int N) {
     XorShift32Salt gen{static_cast<uint32_t>(987654321ULL + 2ULL)};
 
@@ -826,6 +1076,12 @@ void speedXorShift32Salt(ofstream& speed, int N) {
     speed << gen.name() << ',' << N << ',' << ms << "\n";
 }
 
+/**
+ * @brief Измеряет время генерации N чисел для стандартного std::mt19937.
+ *
+ * @param speed Файл для записи результатов замера скорости.
+ * @param N Количество генерируемых чисел.
+ */
 void speedStdMT19937(ofstream& speed, int N) {
     StdMT19937 gen{static_cast<uint32_t>(987654321ULL + 3ULL)};
 
@@ -842,7 +1098,14 @@ void speedStdMT19937(ofstream& speed, int N) {
     speed << gen.name() << ',' << N << ',' << ms << "\n";
 }
 
-
+/**
+ * @brief Главная функция программы.
+ *
+ * Создаёт выборки для трёх собственных генераторов, запускает статистические
+ * тесты, записывает результаты в CSV-файлы и выполняет замер скорости генерации.
+ *
+ * @return Код завершения программы.
+ */
 int main() {
     const int samplesPerMethod = 20;
     const int sampleSize = 1000;
